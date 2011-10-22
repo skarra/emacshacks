@@ -1,0 +1,1006 @@
+%% -*- fill-column: 79 -*-
+%%
+%% Copyright (C) 2002, 2004 Sriram Karra <karra@shakti.homelinux.net>
+%% 
+%% $Id$
+%% 
+%% Last Modified : Sun Dec 12 01:32:31 2004
+%% 
+%% A basic Emacs Lisp tutorial
+%% 
+
+\documentclass[10pt]{article}
+
+\renewcommand{\baselinestretch}{1.0} %1.0 spacing bet. lines
+% The upgrade to debian sarge has screwed up my TeX font database or
+% whatever... The generated postscript is really horrible....
+%\font\tenrm
+\textheight 650pt
+\textwidth 452pt
+\parskip 6pt plus 1pt 
+\parindent 3em
+\oddsidemargin 10pt
+\evensidemargin 10pt
+\topmargin -50pt
+\thispagestyle{empty}
+
+\begin{document}
+\title{Emacs Lisp, The Language - An Introduction}
+\author{Sriram Karra \\ karra@shakti.homelinux.net}
+\maketitle
+
+\setcounter{bottomnumber}{0}
+\setcounter{topnumber}{3}
+
+\begin{center}
+  Copyright (C) 2002-04 Sriram Karra
+\end{center}
+
+Permission is granted to copy, distribute and/or modify this document (in part
+or full) for any purpose as long as the above copyright notice is preserved.
+
+\newpage
+
+\section{Preface}
+
+This article is an introduction to Emacs Lisp, a dialect of Lisp that is used
+as the extension language for Emacs, The One True Text Editor.  Much of Emacs
+itself is written in Emacs Lisp, or Elisp as it is also called.
+
+Some time back I gave a talk at my local LUG (http://www.chennailug.org)
+introducing the basic language features of Emacs Lisp.  The material you are
+now looking at is derived from the notes I made for that talk.  There are many
+manuals and howtos available, including those officially blessed by the FSF,
+but this tutorial presents the material differently from any document that
+exists today (to the best of my knowledge).
+
+Just to reiterate, this tutorial deals only with the language aspects of Elisp.
+How this knowledge can be used to improve your Emacs experience is an
+altogether different topic; one that is dealt with in ``Introduction to Emacs
+Lisp '' and other works available from the FSF and other sources.
+
+If you are using Emacs already, know a programming language or two, and would
+like to know the basic building blocks of Elisp in an effort to lay the
+foundation for a long term fruitful relationship with Emacs, this tutorial is
+for you.  If you are completely new to programming this is not likely to be of
+any use to you.  If you are already a proficient Lisp/Scheme hacker, you are
+unlikely to find much of value here.  The audience in the aforementioned talk
+at my local LUG, for instance, had very little knowledge of Lisp or a Lisp-like
+language, but all had fair to good programming experience.
+
+Please bear in mind that in the following pages, the emphasis is on simplicity.
+For e.g. discussion of macros is avoided till the end. The way things are
+presented here may not be the standard way of teaching Lisp of any kind.  After
+all, I never learned Lisp formally myself.  The idea is to be able to give the
+reader enough of a clue so you can can dig into the larger and more
+``official'' documentation with greater ease.
+
+There are likely mistakes of all kinds in the pages that follow.  I would be
+happy to receive feedback that would enable me to fix such holes.  And finally
+- for best results, please consume the contents the sections in order, and
+within 2 weeks of reading this first page.
+
+\section{Introduction}
+
+Lisp was invented (or some would say 'discovered') by John McCarthy in the
+1960s as a high level general purpose language.  He also happened to coin the
+term ``Artificial Intelligence''.  He, his students and his co-workers began
+using Lisp for their programming tasks and before no time, Lisp got its name
+intimately entangled with Artificial Intelligence.  Lisp, however, is not all
+about AI; it is a general purpose high level language like C, Perl, Java, and
+Python.  To give you an idea, Lisp is used as the extension language for
+Autocad, an industry standard CAD program, for Interleaf, a high end publishing
+program, and of course in Emacs.  Lisp was also used by Paul Graham and Robert
+Morris to build a product that eventually became the foundation of Yahoo Store.
+
+Lisp has evolved over the years and many dialects are in use.  Common Lisp,
+Scheme, Emacs Lisp are, but a few.  Some might even say Lisp is really a family
+of closely related languages.  Be that as it may, these days when someone
+refers to just plain ``Lisp'', she is very likely talking about ``Common
+Lisp'', if at all she knows what she is talking about; i.e.  Common Lisp is the
+standardised version of Lisp, with formally defined syntax and semantics.  What
+ISO C is to C, Common Lisp is to Lisp.
+
+Scheme is a dialect that eschews the more complex features of Lisp and is
+widely used in introductory undergraduate courses for students of computing
+science.  Guile, a scheme implementation is being promoted by the Free Software
+Foundation (FSF) as the extension language of choice for all future GNU
+projects.
+
+Emacs Lisp is a version of Lisp that has a large number of primitives geared
+towards text editing needs.  A number of other crucial incompatibilities exist
+between Elisp and Common Lisp, such as the scoping rules for variables.  These
+differences are significant enough to make Elisp a very different and distinct
+dialect of Lisp, rather than a mere sloppy implementation of the Common Lisp
+standard (or the precursors to the standard - the two versions of Guy L. Steele
+Jr.'s publication ``Common Lisp: The Language'')
+
+This article only touches on the basics of Elisp programming.  So much so that
+most of the material here applies to Common Lisp just as much as Elisp.  So,
+from here on, I use the terms ``Lisp'' and ``Elisp'' interchangeably, except
+where such use will lead to confusion, or there is difference in the behaviour
+of the two that should be noted.
+
+\section{Expressions - building blocks of a lisp program}
+
+A Lisp program is made up of a sequence of expressions.  ``Running'' the
+program is equivalent to ``evaluating'' the expressions sequentially.  In this
+section we look at the syntax of a lisp expression, i.e. how to write
+expressions and do various useful things with them.
+
+\begin{table}[tb]
+  \centering
+  \begin{tabular}{|l l l l l|} \hline
+  expr & ::= &           & \textit{identifer}           & ............ (1) \\
+       &     &  $\vert$  & \textit{constant or literal} & ............ (2) \\
+       &     &  $\vert$  & ( expr* )                    & ............ (3) \\
+       &     &  $\vert$  & 'expr                        & ............ (4) \\
+       &     &  $\vert$  & `expr                        & ............ (5) \\
+  \hline
+  \end{tabular}
+  \caption{Different types of Lisp expressions.  The \texttt{(},
+       \texttt{$'$}, \texttt{$`$} symbols are part of the syntax.
+       Except for some rules like what constitutes a valid \textit{identifier},
+       and certain other extremely abstruse syntactic tokens, the above table
+       shows almost the entire syntax of Emacs Lisp.}
+  \label{tab:exprs}
+\end{table}
+
+Table \ref{tab:exprs} lists the different types of expressions that are
+possible in Lisp.  
+
+Instead of explaining the notation in words, a few examples here would do the
+job.  Table \ref{tab:exprt} shows a set of examples for each of the types of
+expressions we have generically described above.  For now, you can just assume
+that Type \texttt{5} are identical to Type \texttt{4}.  Each of the sample
+expressions is a valid lisp expression, syntactically.  i.e. each of them can
+appear by themselves in a line of a valid lisp program.
+
+Before we proceed let me tell you that what you see above is pretty close to
+the entire syntax of lisp expressions.  Considering that a lisp program is made
+up a sequence of expressions (and comments, if it is a good lisp program - a
+semicolon character starts a comment; the end of line terminates one), you have
+already learnt almost all there is to know to start writing full programs :-)
+Yes, it is not really complete, and there are a few things that are yet to be
+specified, like what constitutes a valid identifier name and such, the
+different ways in which numeric constants can be representation etc.  Such
+minor issues aside, you really do have, in the above table, practically all the
+ways in which you can build lisp expressions from the fundamental lexical
+elements.  Compare this to the horrendous nonsense that passes for the syntax
+of a ``modern'' high-level language like C++ or Java.
+
+\begin{table}[tb]
+  \centering
+  \begin{tabular}{|l|l|l|} \hline
+    Expression Type & Sample Expressions & Comment     \\ \hline
+    Type (1) & \texttt{x}                & Identifiers \\
+             & \texttt{foo}              &             \\ \hline
+    Type (2) & \texttt{10}               & Literals    \\ 
+             & \texttt{5.8}              &             \\
+             & \texttt{"Hello World"}    &             \\
+             & \texttt{nil}              &             \\ \hline
+    Type (3) & \texttt{()}               & Building complex expressions out \\ 
+             & \texttt{(foo)}            & of other expressions              \\
+             & \texttt{(factorial 10)}   &             \\
+             & \texttt{(+ 10 2)}         &             \\
+             & \texttt{(setq foo 10)}    &             \\
+             & \texttt{(factorial (+ 10 2))} &         \\
+             & \texttt{(if foo 1 0)}         &         \\ \hline
+    Type (4) & \texttt{'(0 1 2)}             & Quoted expressions           \\
+             & \texttt{'foo}                 &         \\ \hline
+    Type (5) & \texttt{`(list (+ 1 2) 3)}    &         \\ \hline
+  \end{tabular}
+  \caption{Various expression types.  The designations \texttt{Type (1),
+    Type (2)}} etc. are not standard.  I have labelled them such for
+    convenience of discourse here.
+  \label{tab:exprt}
+\end{table}
+
+Type \texttt{(1)} expressions define identifiers, straightforward enough.
+
+Type \texttt{(2)} expressions define literals.  A literal is nothing but a
+constant.  Constants are typically integers, floating points, strings and
+characters.  \texttt{nil} is a special literal.  You can think of it as the
+equivalent of the value ``false'' in Pascal or C++.  The opposite truth value
+of \texttt{nil} is represented by the symbol \texttt{t}.  We will have more to
+say about nil later.
+
+Type \texttt{(3)} expressions: This rule just says ``zero or more expressions
+separated by white space and enclosed in brackets is an expression.'' This is
+the rule that can be used recursively to make increasingly complicated
+expressions, and is essentially the rule that gives the lisp-ish touch to a
+program's look and feel.
+
+\texttt{()} is special and very different from the others listed above.  For
+now, just think of it as another way of writing \texttt{nil}.  We will have
+more to say about both when we talk about lists.
+
+The expression \texttt{(foo)} is a function call to function \texttt{foo}.
+This is how function calls are written in lisp.  In fact, if any lisp
+expression (of Type (3) excluding \texttt{()}) is evaluated, then the first
+symbol inside the brackets has to be the name of a function.  The lisp
+interpreter flags an error otherwise.
+
+Thus, \texttt{(factorial 10)} is a call to a function named \texttt{factorial}
+and we pass the value 10 as an argument.  By the same token, \texttt{(+ 10 2)}
+is a call to a function named \texttt{+} that takes two arguments.  ``But...'',
+you say, ``\texttt{+} is an operator, right?  What do you mean by ``a function
+named \texttt{+}'' ''.  This brings us to an interesting point about lisp.  In
+lisp, there is no difference between ``operators'' and ``functions''.  All of
+them are lisp functions defined somewhere.  What one would call an operator in
+Java or C++ is defined as a function in lisp.  \texttt{+ - * / *= /= \%} are
+all lisp functions.  This particular feature of lisp is radically different
+from all other modern and popular procedural languages, and hence takes a
+little getting used to.  If you are a C++ programmer, now is a good time to
+disabuse yourself of any notion that operator overloading was invented by
+Dr. Stroustrup just for you.  The sections on Lisp handling of types will
+further rub in this truth.
+
+Looking at these examples afresh in light of the information that operators and
+functions are one and the same, we can make a few key observations about a few
+other features of lisp.  The first is that lisp function names (all identifier
+names, actually) can contain ``special'' characters.  So, \texttt{foo123, a++,
+this->sucks, my**lifez**great, foo\_\&\_bar, /, == } are all valid names for
+variables and functions.  This is a refreshing change from the ``alpha numeric
+and underscore only'' limitation that somewhat restricts one's creative juices
+from flowing freely.
+
+Secondly, we note that Lisp uses the prefix notation for arithmetic
+expressions.  I.e. while writing an arithmetic expression the ``operator''
+precedes the operands.  This is in contrast to the infix notation followed in C
+and the monstrosities that followed.  This prefix notation business is a little
+weird at the start, but it solves so many problems that it is very much worth
+the effort to get used to it.  Think about it: it wholly gets rid of precedence
+and associativity issues!  How is that for an elegant solution to a pesky
+problem that haunts generation after generation of programmers!
+
+Thirdly, there is no real distinction between ``unary'', ``binary'',
+``ternary'' operators and so on.  This is good for the programmer, as there are
+fewer details to be worried about.  If you are a C programmer, can you tell me,
+quickly, what is computed by the following expression - \texttt{i --- j;}
+
+The expression \texttt{(setq foo 10)}, has the same pattern of some other
+expressions listed, but is interesting for other reasons and hence I have
+listed it above.  \texttt{setq} is a predefined function that assigns values to
+variables.  In Lisp, you need not declare variables explicitly before you
+assign values to them, you can start by assigning values to any variable name,
+and that variable will be brought into existence if it is not already.  It
+suffices that you know this much for the time being.  More on variables, and
+assigning values to them, later.
+
+We will deal with Type \texttt{(4)} and Type \texttt{(5)} expressions in the
+next section.
+
+\section{Evaluating Expressions}
+
+As we noted earlier, an expression is a distinct building block of a lisp
+program.  We can think of ``evaluating an expression'' as the act of executing
+the expression and obtaining its value.  Strictly speaking, when an expression
+is evaluated, two distinct things happen: firstly the text of the expression is
+read by what is called the ``Lisp Reader'' which produces an internal
+representation called the ``Lisp object'', secondly this produced object is
+evaluated and a vale is returned.  The distinction between these two processes
+is not important most of the time.  But knowing about the difference will help
+understand things better as you become more proficient in Lisp.
+
+What happens when you evaluate a particular expression depends on the type of
+expression.  For a \texttt{Type (1)} expression, the value of the variable is
+the result.  If the expression is of \texttt{Type (2)} then the result is the
+constant itself.  i.e. if \texttt{10} is evaluated, the result is \texttt{10}.
+If the expression being evaluated is of \texttt{Type (3)}, then a function call
+is made.  The value of such an expression is the return value of the function.
+Function calls are explored in greater detail in the following section.  If the
+expression, on the other hand, is a ``quoted expression'', i.e. of Type
+\texttt{(4)} or Type \texttt{(5)}, then evaluation is inhibited.  For e.g. in
+\texttt{(set 'foo 10)} \texttt{'foo} is a quoted expression.  Here, we want to
+pass the \textit{variable itself} to the function, rather than its value.  So,
+we want to inhibit the evaluation of the expression \texttt{foo} before the
+function \texttt{set} is called.  To accomplish this, we put a quote character
+before \texttt{foo}, thereby telling the lisp interpreter to return the
+expression itself, rather than the \textit{value} of the expression.  To say it
+a little differently, the value of a quoted expression is the expression itself
+(or more correctly, the lisp object corresponding to the expression; more on
+this later)
+
+A solid understanding of quoted expressions is key if you want to program in
+Lisp at any level and, as a result, exploit the customisability of Emacs.  It
+is to the Lisp programmer, what understanding pointers is to a C programmer.
+As such, it is worth spending some more time on the topic.
+
+Consider the English sentence: \textit{Madras has six letters}.  The sentence
+is ambiguous.  Does the statement make a reference to the number of missives
+present in all post offices of the city called Madras, or does it point out to
+the reader, the total number of letters of the English alphabet making up the
+word Madras?  Two things contribute to this ambiguity - the multiple meanings
+of the word \textit{letter}, and far more relevant to this discussion - the
+potential for ambiguous parsing of the symbol \textit{Madras}.  When we write
+\textit{Madras}, do we refer to a six letter word itself, or do we refer to a
+city of nearly 7 million inhabitants, the South Indian port city and capital of
+Dravidian state Tamil Nadu?  Generally, the surrounding context is enough to
+disambiguate.  However, the potential to confuse remains, as seen above.
+
+This problem is generally solved by enclosing the problematic term in quotation
+marks when the reference is to the symbol itself, and use the term plainly when
+the reference is to the object it nominally denotes.  That is, we would say
+\textit{``Madras'' has six letters} if we want to refer to just the word
+without invoking any related connotations.  And \textit{Madras has six letters}
+will refer to the City.  What we have done is made use of quoting.
+
+In this sense, a quoted expression in Lisp refers to the Lisp object itself
+that makes up the expression rather than the value of the expression.  The Lisp
+interpreter will not evaluate a quoted expression, just as humans refrain from
+attributing meaning to a word in an English sentence enclosed in quotes.
+
+Finally, a note for the advanced reader.  As noted earlier, Type (4) and Type
+(5) expressions are largely similar.  The only difference between the two,
+apart from the obvious difference of using different ticks used to quote, is
+that if a Type (5) expression is a quoted list, then there are ways to
+selectively allow some of list elements to be evaluated and used in the quoted
+expression.  If that is not enlightening, do not worry.  This difference is
+important only when using an advanced lisp programming feature called Macros.
+We do not talk about macros in this tutorial, so we do not need to concern
+ourselves about it here.
+
+If you want to test out some expressions and evaluate them, go to the *scratch*
+buffer in emacs, type an expression, move cursor to the end of your expression
+and type C-x C-e.  This will evaluate the expression and print the result in
+the mini-buffer.
+
+\section{Functions}
+
+In this section we will look at functions in slightly more detail.  We do this
+in two parts: (a) calling functions that are already defined (b) defining your
+own functions.
+
+\subsection{Calling Functions}
+
+As noted in a prior section, any lisp expression that is enclosed in brackets
+is a function call.  When such an expression is evaluated, the lisp interpreter
+looks at the very first expression inside the brackets and verifies that it is
+the name of an already defined function.  An error is signalled if it is not.
+After this error checking is out of the way, the remaining expressions inside
+the brackets are evaluated one at a time from left to right and a series of
+values are obtained for these expressions.  Once all such expressions are
+evaluated, the function call is made with these values as the arguments.  A few
+examples are a good idea.  Consider the following expression:
+
+\texttt{(+ 1 2)}
+
+When this expression is evaluated, the lisp interpreter first identifies as an
+expression of Type (3), and proceeds to check if \texttt{+}, the first
+expression inside the brackets, is the name of a predefined function.  In this
+case, it is.  Then it sees two expressions \texttt{1}, and \texttt{2} inside
+the brackets, and it proceeds to evaluate them both and obtain their values,
+and subsequently calls the function \texttt{+} with the values 1, and 2.  The
+return value of the function is the value of the expression as a whole.
+
+Consider the following expression:
+
+\texttt{(+ (+ 1 1) foo)}
+
+This is a slight variation on the previous one.  The lisp interpreter
+identifies \texttt{+} as a defined function and then finds another \texttt{Type
+  (3)} expression \texttt{(+ 1 1)}.  The above process is repeated till its
+value is obtained.  Now the lisp interpreter sees the identifier \texttt{foo},
+and evaluates it to obtain the value of the variable.  Finally it can call the
+\texttt{+} function with values 2 and value of \texttt{foo}.  The return value
+of the function is the value of the expression as a whole.
+
+The moral of the story about function calls is simple: if an expression of
+\texttt{Type (3)} is evaluated, the first expression inside the brackets is a
+function and the rest are its arguments.  The argument expressions are all
+evaluated to values in turn before the function is called.
+
+\subsection{Defining Functions}
+
+It's all well that we can call functions, but how the hell do we define some of
+our own?  In this section we will address this question.  As always, a simple
+example will convey the essence quite readily.  Consider the following lisp
+expression:
+
+\begin{verbatim}
+(defun foo ()
+  (message "Hello World\n")
+  (message "Hello world once again!\n"))
+\end{verbatim}
+
+Note: \texttt{message} is a built-in function in Elisp that prints a string in
+the Emacs mini-buffer area (the bottom-most line in an Emacs window; this area
+is used to accept input for emacs commands and as an echo area to report
+command output and errors).
+
+A function is a sequence of lisp expressions clubbed together, and typically
+referred to with a name.  In the above example, \texttt{foo} is the name of a
+function that contains two expressions.  The declaration starts from the
+bracket to the immediate left of the \texttt{defun} keyword to the
+corresponding close bracket.  You must note, and rest reassured, that such a
+declaration itself conforms to the format of a type 3 expression.  There is
+nothing particularly magical about the syntax of a function declaration in
+lisp, only the text is formatted a little weird, and you can say the positional
+arguments have some specific significance.  So, if you want to try your hand at
+declaring a function, type out the above example, and do the C-x C-e routine as
+explained earlier.
+
+Let us look at another example:
+
+\begin{verbatim}
+(defun factorial (n)
+  (if (<= n 0)
+      1
+    (* n (factorial (- n 1)))))
+\end{verbatim}
+
+This is an implementation of the factorial algorithm.  Note that the function
+body contains only one expression (the \texttt{if} expression.) which is split
+across multiple lines.  The \texttt{(n)} in the first line of the declaration
+specifies the formal parameter list for this function.  In this case, there is
+only one; if a function needs to take multiple parameters, the names must be
+specified inside the brackets and separated by white space.  One also notes
+that the types of parameters are not declared anywhere.  In fact, this is a
+feature of lisp in general.  Lisp has ``latent types'', which contrasts with
+``manifest types'' of other procedural languages; one might also say that Lisp
+is a dynamically typed language where the type of a variable is determined only
+at the time of its evaluation.  This dynamic nature of the type system means
+``generic programming'' comes for free in Lisp.  Just think of those poor sods
+struggling with templates... sigh.
+
+Note that there is no such a thing as a ``return'' statement or expression in
+lisp.  The value of the last evaluated expression in the function is the return
+value of the function.  So, in the above example, the return value of
+\texttt{foo} is whatever the second \texttt{message} call returns (BTW, message
+just returns the string it printed out).
+
+The key thing that differentiates a function declaration from other
+expressions, of course, is the word \texttt{defun}.  When the expression
+declaring a function is evaluated, that function name is registered with the
+lisp interpreter as a valid function with a body.  If you want to change the
+definition of a function, just write a new defun and eval it.  That's it.  The
+old definition will be replaced with your new version.  This is one way to
+'customise' your Emacs session - by overriding internal Emacs functions with
+your own; although I must point out that it is not the best of the available
+options :-)
+
+\subsection{Anonymous Functions}
+
+Although it is very useful to give a function a name, this is not strictly
+necessary.  Giving a function a name is necessary only if we want to repeatedly
+call that function.  We can still create ``anonymous functions'', i.e.
+functions without names.  Such functions are not as totally useless as one
+might first assume.  In lisp, functions are first class objects.  This means
+you can do with (or to) a function what you can do with (or to) a normal type
+like an integer string.  Like pass it as arguments to other functions, return
+it from functions, assign it to names etc.
+
+The right way to think about a function is as an object containing all the
+expressions making up the function body.  The way to create such an anonymous
+function object is as follows:
+
+\begin{verbatim}
+(lambda ()
+  (message "Hello World\n")
+  (message "Hello world once again!\n"))
+\end{verbatim}
+
+This is the same function we saw in an earlier example.  The only difference
+being that this function has no name.  One application of such anonymous
+functions in Emacs is to assign it to hook variables.  Once you create and
+assign a function object to a hook variable, you, the user, do not need the
+function, so it does not matter if you do not give it a name.  An example of
+assigning to hook variables is this:
+
+\begin{verbatim}
+(add-hook 'c-mode-hook 
+          (lambda () (message "Hurrah!  I am entering the C mode!!")))
+\end{verbatim}
+
+\subsection{Misc stuff about functions}
+
+We are not yet done with functions :) At this point, the astute reader should
+begin to feel a little uneasy, as I seem to have uttered a couple of
+contradictory things!  If the contradiction is not obvious, let me spell it out
+loud and clear.  In the previous section on function calls, I made the claim
+that in any Type (3) expression, the first expression after the opening bracket
+is a function and the rest are its arguments, and that before the function call
+is made all the arguments are evaluated.  Further, in the preceding paragraphs,
+I asserted that the lisp expression declaring a function is a type 3
+expression.  So, if one were to apply the evaluation logic just explained to a
+function declaration expression, things do not seem to work too well.  Look at
+the declaration of \texttt{foo} above.  We should read the declaration as ``Hm,
+\texttt{defun} is a function and the remaining expressions in the brackets are
+all expressions that need to be evaluated in turn.  So, first \texttt{foo} is
+evaluated then \texttt{()} and so on...''  Hm, suddenly the elegance of a lisp
+function declaration seems to be crumbling.  Of course, all this shit does not
+happen.  Why this does not happen is the topic of the next section.
+
+\section{Special Forms}
+
+In lisp terminology, a ``form'' is the same as an ``expression''.  We saw above
+that for \texttt{defun} to behave ``correctly'', its arguments should not be
+evaluated.  In effect, we are asking for a semantics that is slightly different
+from the typical run-of-the-mill function call.  An expression which has this
+special semantics is called a ``special form''.  Thus, a special form is, by
+definition, a function specially marked such that not all of its arguments are
+evaluated.  Most special forms define control structures or perform variable
+bindings -- things that functions cannot do.  \texttt{defun} is the only
+special form that we have encountered thus far.  The total number of available
+special forms is quite small, but we shall not look into all of them, rather,
+in order to give you some more feel about the need for special forms, we shall
+look a couple more.
+
+In most modern languages the boolean operators \texttt{or} and \texttt{and}
+(``$||$'' and ``\&\&'' in C, C++ and Java) have a property known as
+``short-circuiting''.  This short circuiting property enables us to safely
+write code that looks like this:
+
+\begin{verbatim}
+if (p && p->data == 0) {
+  // ...
+}
+\end{verbatim}
+
+In the above code snippet, the second expression \texttt{p->data == 0)} is
+evaluated only if necessary.  The \texttt{and} function in lisp also has this
+short-circuiting property, and the lisp version looks something like this:
+
+\begin{verbatim}
+(and (not (null p))
+     (= data 0))
+\end{verbatim}
+
+In order to effect this short-circuiting property, we cannot allow the normal
+evaluation semantics of a typical function call as that will evaluate both the
+sub expressions.  For this reason \texttt{or} is implemented as a special form
+in Elisp.  The advanced reader might be interested to know that in Common Lisp,
+many of the constructs that are special forms in Elisp special forms are
+actually implemented as macros.
+
+Early on, when talking about types of expressions, we mentioned that the
+variable assignment expression \texttt{(setq foo 10)} is special, but did not
+elaborate.  With your new found enlightenment, you should have no trouble
+seeing that \texttt{setq} is a special form.  For, if it were a regular
+function, the first argument \texttt{foo} would be evaluated, and we would not
+quite be able to \textbf{assign} a new value to it.
+
+The Emacs Lisp Manual lists the complete list of available special forms in
+Elisp.
+
+\section{Primitive and Built-in Functions}
+
+Emacs is written in two languages: C and Elisp.  The bulk of the C code is the
+implementation of a lisp interpreter, some display stuff, and the
+implementation of a core set of Lisp functions (i.e. routines that can be
+called from an Elisp program).  The rest of the editor functionality is written
+in Elisp.  The routines callable from Elisp programs, yet written in C are
+called ``primitive'' or ``built-in'' functions.  From a user point of view,
+there is only one key difference between the two, although it is not of
+interest to the beginner.  In Lisp, one can re-define functions, by simply
+declaring another function with the same name, just as if the function did not
+exist in the first place.  This is very convenient, but one must exercise
+caution while doing this.  If a primitive function is re-defined in a lisp
+program, then all subsequent lisp invocations of that function will be to the
+new definition, but all subsequent invocations of the function in C code will
+still be to the C implementation.  One does not have to be to Richard M.
+Stallman to understand that this can have unintended results.
+
+\section{Variables}
+
+Before we go further into how variables are treated in Elisp, we should really
+revisit the real meaning a ``variable''.  OK, stop staring.  This fundamental
+concept in programming is also somewhat notorious in that most folks (including
+professional programmers) do not have a sound handle on it.  It is my firm
+belief that a lack of a solid understanding of this concept is the real reason
+why so many people have trouble understanding pointers in C and C++.
+
+That is not to say that the concept of a \textit{Variable} is trivial to
+understand.  As a matter of fact, philosophers of the 19th and early 20th
+centuries, working on systematising the logical foundation of mathematics,
+found it fairly difficult to nail down the nature of \textit{variable}s they so
+happily used in their symbolic logic proofs and what not.  They agonised over a
+suitable definition for it.  Bertrand Russell, in \textit{The Principles of
+  Mathematics}, published in 1903, says:
+
+{\parindent=50pt  
+
+  {\narrower\smallskip\textit{The variable is perhaps the most distinctively
+      mathematical of all notions; it is certainly also one of the most
+      difficult to understand.} [...much philisophical mumbo-jumbo snipped..]
+    \textit{It appears from the above discussion that the variable is a very
+      complicated logical entity, by no means easy to analyse
+      correctly.}\smallskip}}
+
+It is generally conceeded by philosophers that the concept did not receive
+complete clarity till computer scientists arrived on the scene, and pointed out
+that a variable is a named location.  That's it.  Imagine a location in the RAM
+of your computer that is identified by a unique address and also given a name.
+This is just like a real-life domestic post box.  Each post box has a unique
+address, and each such address also has a name, not necessarily unique (Note
+however that the name+address combo is unique).  A variable also has some
+contents, just like a real-life post box has some letters inside it.  So, when
+we say ``x is a variable'', it is short for ``there is a location in memory
+that we call x; this memory location can contain different things contents at
+different points in time''.  (Note that the contents of a variable do not
+define the variable, hence in the above definition, we restrict it to the name
+and location)
+
+There is a special twist in the way Lisp handles variables, and this issue
+needs to be clarified before going into details of the actual handling of
+variables.
+
+\subsection{Symbols}
+
+In other languages one has ``variables''.  In Lisp we have ``symbols''.
+Symbols are named locations.  What can go into that location is quite different
+and intriguing.  One can visualise a symbol as shown in Table \ref{tab:sym}
+
+\begin{table}[tb]
+  \centering
+  \begin{tabular}{|l|l|l|l|} \hline
+    name &  value as a  &  definition as & space for      \\
+         &  variable    &  a function    & property lists \\ \hline
+  \end{tabular}
+  \caption{The parts of a Lisp Symbol.}
+  \label{tab:sym}
+\end{table}
+
+A symbol object in Lisp is the whole thing with all four ``cells''.  The most
+striking feature of a symbol is that there are distinct cells to hold its value
+as a variable and its value as function definition.  What this means is that
+any name can have both kind of bindings.  In other words, \texttt{foo} can have
+the value 10 associated with it, and can also have some function definition.
+There are predefined functions in Elisp to access the different cells of a
+symbol.  \texttt{(setq foo 10)} will assign the value 10 to \texttt{foo}'s
+variable cell.  \texttt{(fset 'foo 'bar)} will assign the function definition
+of \texttt{bar} to \texttt{foo}.  Note that these are not the only ways to
+accomplish this effect.
+
+You may ask, reasonably, ``if the same name can act as a variable and a
+function, will it not create problems at run-time?''  It turns out not to be a
+problem.  The lisp interpreter is able to tell unambiguously when a symbol
+should be accessed as a variable and when it should be accessed as a function.
+The simple rule is this: if a (non-quoted) symbol is the first expression
+inside a bracketed expression, then it should be accessed as a function, and in
+all other cases, it should be accessed as a variable.  So, assuming
+\texttt{foo} has both variable and function bindings, the first example
+accesses foo as a function and the second example as a variable
+
+\begin{verbatim}
+(foo 10)
+(bar (+ foo 10))
+\end{verbatim}
+
+A symbol has a fourth cell: some space to hold property lists.  This is a
+convenient place to hold name/value pair property data relevant to the symbol.
+For e.g. many Elisp commands come disabled by default.  when a disabled Elisp
+command is invoked, Emacs prompts the user and asks him if he really intended
+to invoke this command and whether the command should be enabled for all future
+sessions etc.  The information about the disabled/enabled state is maintained
+in the fourth cell of the symbol.  This is just one example to give you an idea
+about the usefulness of this property list business.  For the curious folks,
+\texttt{put} and \texttt{get} are the Elisp functions that can be used to
+access the property-list area of a symbol.  We shall not go into them in any
+more detail.
+
+To sum it up, a Lisp symbol can have both a variable binding and a function
+binding.  When one just talks about 'variables', one refers to the variable
+binding of the symbol.  With that understanding, let's look at the most
+important thing one needs to know about what Elisp lets us to with them.
+
+\subsection{Variable Operations}
+
+\subsubsection{Defining Variables}
+
+As we mentioned earlier, we do not really need to either declare or define a
+variable formally to use it.  We can just \texttt{setq} a variable and it will
+be brought into existence if it is not already so.  However, there are a couple
+of special forms \texttt{defvar} and \texttt{defconst} that can be used to
+define a variable, if you feel like it.  A proper definition serves two
+important purposes.  First, they inform people who read the code that certain
+symbols are intended to be used a variables.  Second, special forms allow one
+to specify a documentation string, which Emacs can then make available through
+the Help infrastructure.  Neither of these is not possible \texttt{setq}.
+
+\texttt{defvar} has an interesting property that is worth noting here.  Suppose
+a variable is already set to any value (i.e. it 'exists') then \texttt{defvar}
+will not alter the value.  It will just take the doc. string and move on.  This
+is extremely useful when changing default settings in your ~/.emacs.  Let's say
+you want to change the default value \texttt{(setq calendar-setup 'two-frames)}
+You do not need to worry if calendar.el (which has the definition for
+\texttt{calendar-setup}) was loaded in before your that line in your .emacs is
+executed.  Either way, the value of your calendar-setup will be set to the
+value you choose, and not the default defined in calendar.el
+
+The purpose of \texttt{defconst} should be fairly clear from its name.  Before
+using it, though, you should look up its documentation, for there are some
+things you should be aware that we are not going into here.
+
+\subsubsection{Global and 'Local' Variables}
+
+We have talked of three ways of bringing variables into existence -
+\texttt{defvar} \texttt{defconst} \texttt{setq}.  The variables born thus will
+be in the global namespace - exactly like global variables in C.  This means
+even if your first \texttt{setq} on a variable is in the body of a
+\texttt{defun}, once the function gets executed the variable, and the set value
+will be `visible' to all.
+
+It is possible to create local variables that exist temporarily--only until a
+certain part of the program finishes.  In fact, such temporary local variables
+get created automatically for functions with arguments.  The local variables
+are assigned values from the function invocation, and after the function
+returns their old values are restored.  If a variable does not exist outside
+the function, but is used as a function argument, once the function returns, it
+will remain undefined.  In other words, the arguments of a function get
+\textit{new bindings} and the previous values are \textit{shadowed}.
+
+It is possible to give variables a new binding at arbitrary point in your
+program by using the \texttt{let} special form.  The syntax of a \texttt{let}
+form is something like this:
+
+\begin{verbatim}
+(let ((variable-1 10)
+      (variable-2 "abcd"))
+  (...))
+\end{verbatim}
+
+The above \texttt{let} form provides new binding to two variables.  The new
+bindings last until execution exits from the \texttt{let} form.  \texttt{let}
+forms can be nested; however, there is a limit on the maximum number of nested
+bindings an individual variable can have.  This limit is specified by the value
+of \texttt{max-specpdl-size}.
+
+\texttt{setq} alters the value of the inner-most binding.  If there are no
+local bindings, then it alters the global value.  This rule is called ``dynamic
+scoping''.  We examine the variable scoping rules in a little more detail in
+the next section.
+
+%% Commented out for now.  Not clear if this is really required here.
+%%
+%% \subsubsection{Special Types of Local Variables in Elisp}
+%% 
+%% Emacs provides a gazillion variables that one can manipulate the behaviour
+%% in amazing ways.  
+
+\subsection{Scoping Rules}
+
+The Elisp manual says \textit{Local bindings in Emacs Lisp have ``indefinite
+  scope'' and ``dynamic extent''.  "Scope" refers to \underline{where}
+  textually in the source code the binding can be accessed.  "Indefinite scope"
+  means that any part of the program can potentially access the variable
+  binding.  "Extent" refers to \underline{when}, as the program is executing,
+  the binding exists.  "Dynamic extent" means that the binding lasts as long as
+  the activation of the construct that established it.}
+
+You can use that to impress your friends; if you can say it with a straight
+face.  But, what does it really mean?  The heart of the matter is that if you
+look at a lisp function definition, say, and find some variables used, for
+which no binding is apparent in the function itself, there is no cause for
+worry.  It is alright as long as \textit{at the time of execution of that
+  function} the variable has a binding.  This is very different from a
+language like C, where a variable should have a binding in the same textual
+block as the usage.
+
+\begin{verbatim}
+(defun foo ()
+   (message "bar is \%s" bar))
+(let ((bar "foo"))
+  (foo))
+\end{verbatim}
+
+In the above example, function \texttt{foo} is using \texttt{bar} which appears
+to be a \textit{free variable}.  When \texttt{foo} is invoked as shown inside a
+let statement, \texttt{foo} gets bound to a value, although the place of usage
+is inside another function.  If, however, \texttt{foo} is invoked without
+providing a local binding as shown, then there will be a runtime error pointing
+out that \texttt{foo} has no binding.
+
+Common Lisp is a complicated beast.  Its variables can have either lexical
+scope (i.e. C like scoping behaviour), or dynamic scoping (explained above).
+Elisp has only dynamic scoping.
+
+If you really want to know more about scoping and really want to get more
+confused, you should feel free to refer to the Elisp manual.
+
+\section{Lisp Objects and Data Types}
+
+Expressions are written as text in a Lisp program.  The Lisp system's internal
+representation of these expressions are referred to as `Lisp Objects'.  When an
+expression is evaluated (say interactively using the C-x C-e key in the
+\*scratch\* buffer), the text of the expression is first read and converted
+into a ``Lisp object'' and the resulting Lisp object is evaluated.  In addition
+to expressions, there are certain Lisp objects which cannot be represented as
+text in a lisp program.  For e.g.  Elisp has a 'Buffer' object that cannot be
+written as an expression.`
+
+It is very important to keep in mind that the Lisp interpreter acts on lisp
+objects and not directly on textual expressions.
+
+Although there is no explicit mention of type names anywhere in a Lisp program,
+like in C or C++, it does not mean Lisp has no types.  Each object has a type
+-- atleast one type.  Lisp types should be thought of as overlapping universe
+of objects.  Thus one can ask `Is the variable \texttt{foo} of type
+\texttt{bar}?', but not `what is the type of variable \texttt{guppy}'
+
+Lisp supports a large number of data types; all of which can be grouped into
+one of two broad categories - the types that have to do with Lisp programming,
+and those that have to do with editing.  The latter are unique to Emacs Lisp,
+while the former are available in Common Lisp and other dialects, generally
+speaking.  Examples of the former category are integer type, floating point
+type, character type, symbol type, array type, string type, function type, cons
+cell type and so on.  Recent versions of Emacs have more, like hash table type
+and so on.
+
+The second category consists of such types as the buffer type, marker type,
+window type, frame type, process type, overlay type, and so on.  These types
+are used for objects used to save editor state, configuration and so on.
+
+\subsection{Lists and The ``Cons Cell'' Type}
+
+Of all the types mentioned above, the one type we have not spent much time on
+already, yet demands attention is the ``cons cell''.
+
+Lisp stands for \textit{List Processing}, yet we have remained strangely silent
+on the topic of Lists.  I am sure this is some kind of a record for
+introductory texts on Lisp - to talk about lists so late. 
+
+But before we look at lists, we need to look at \textit{Cons cells} first.  A
+cons cell is a data object that represents an ordered pair.  That is, it has
+two slots, and each slot ``holds'' some lisp object.  The first slot is called
+the \textit{CAR} of the cons cell, while the other is called the \textit{CDR}
+(pronounced 'could-er') slot.  The car and cdr slots can hold objects of
+different types.  A cons cell can be constructed using the \texttt{cons}
+built-in function, as the following illustrates:
+
+\begin{verbatim}
+(setq a (cons 1 2))
+(setq b (cons 10 "abcd"))
+\end{verbatim}
+
+Two built-in functions \texttt{car} and \texttt{cdr} are available to access
+the car and cdr cells respectively.
+
+A ``list'' represents a sequence of zero or more elements.  Lists, however, are
+not a primitive data type; they are built up from \textit{cons cells}.  It does
+not matter how exactly it is implemented internally; but it helps to visualise
+a list as a cons cell whose cdr is either nil or another list.  So, the
+following is a legit. way of creating a list:
+
+\begin{verbatim}
+(setq lis (cons 1 (cons 2 nil)))
+\end{verbatim}
+
+This can get cumbersome when building large lists so there are short cuts,
+ofcourse, like:
+
+\begin{verbatim}
+(setq lis (list 1 2))
+\end{verbatim}
+
+The two methods yield the same results, but the first one illustrates exactly
+how the list is built up, while the second one hides that detail in favour of
+brevity.
+
+You must note that the written representation of a list in a Lisp program is as
+a sequence of symbols enclosed in brackets.  You must also note that this is
+the precise syntax of a Lisp expression itself!! In otherwords, your Lisp
+program is itself written as a series of Lists.  This is a really interesting
+property, and you should spend some time reflecting on this.  Internalising
+this concept would help you a little in understanding the realy profundity
+behing the cliche \textit{``In Lisp code is data''}.
+
+\subsection{Run Time Type Identification}
+
+The Emacs Lisp interpreter does not do any type checking on the actual
+arguments passed to functions.  It could not do so, as function arguments in
+Lisp do not have declared data types.  This means that a caller can legally
+call a function with an integer, just as he can with a string literal.  Given
+this scenario, how can the callee ensure or enforce some type semantics for its
+operation.  After all, \texttt{(factorial ``Sriram Karra'')} does not make
+sense even in a `dynamically typed' with `latent types' language such as Emacs
+Lisp.
+
+The answer is Type Predicates, or Run Time Type Identification.  Lisp provides
+certain functions (built-in functions in Elisp) that can be used to identify
+the type of an object at runtime.  Examples of such predicates are
+\texttt{listp}, \texttt{numberp}, \texttt{stringp}, etc.
+
+Type predicates are an extremely handy tool when it comes to customising your
+Emacs.  You will find plenty of Elisp variables that can be set to any number
+of different types of values, and the responsible package will do interestingly
+different things in each case.  Just to give you a flavour,
+\texttt{message-signature} is a variable in one of Emacs' mail packages.  If
+this variable is set to \texttt{t}, the contents of file pointed to by
+\texttt{message-signature-file} will be inserted as your .sig in outgoing
+mail.  If it is assigned a function name, the function is executed and the
+result is used as the sig.  If it is a string literal, the string itself is
+inserted as the sig.  And finally, it can be any Lisp expression, in which case
+the form is eval'ed and the result is used.  How is that for a customisable
+mail agent :-)
+
+\section{Misellaneous Topics}
+
+\subsection{Truth Values}
+
+We mentioned in an earlier section that \texttt{nil} in Lisp denotes the
+logical truth value FALSE.  To be more precise, the term \texttt{nil} has three
+separate meanings: it is a \textit{symbol} with the name 'nil'; it is the
+logical truth value \textit{false}; and it is the empty list -- the list of
+zero elements.  It can also be used wherever a variable is expected, in which
+case its value is always \texttt{nil}.
+
+From the Lisp interpreter's point of view, there is absolutely no difference
+between \texttt{nil}, and \texttt{()}.  These two textual symbols appear the
+same to the Lisp system; in other words, they are two different textual
+representations of the same Lisp object.  In practise, you would find folks
+using \texttt{nil} to emphasise the truth value FALSE, and \texttt{()} is used
+to emphasise the empty list.
+
+Just as in C any non-zero value is considered as TRUE in a conditional
+expression, in Lisp any non-\texttt{nil} value is considered as TRUE.  Be that
+as it may, we also have a symbol \texttt{t}, which is used widely, \textit{per
+  convention} as the generic TRUE truth value.
+
+The symbols \texttt{nil} and \texttt{t} are unique in one very interesting way
+- you never \textbf{need} to quote them.  This is because they always evaulate
+to themselves.  Take some time out and reflect on that.
+
+\subsection{Control Structures}
+
+Although a Lisp program is a sequence of expressions, life would be quit boring
+if we could not, somehow, alter the flow of control to go ``non-linearly''.
+Lisp has almost all the usual control constructs one finds in other high level
+languages, like varieties of sequencing, conditional contructs, iteration, and
+some form of ``jumps''.  The one missing contruct is the \texttt{for} loop.  As
+we have already seen in an earlier section, all of these contructs are
+implemented as special forms.  Table \ref{tab:controls} shows some of the
+control constructs available and some examples.
+
+\begin{table}[tbh]
+  \centering
+  \begin{tabular}{|l|l|l|} \hline
+    progn & Sequential evaluation.  Used when you & (progn (message ``1.'') \\ 
+          & really want multiple forms  where only one &    (message ``2.'') \\
+          & is allowed  & (message ``3''))\\ \hline
+
+    if    & The usual thing       & \texttt{(if condition} \\
+          &                       & \texttt{    then-form } \\
+          &                       & \texttt{   else-forms)} \\ \hline
+
+    when  & Just the 'if' portion of an if contruct but 
+          & \texttt{(when condition A B C)} \\
+          & allows multiple forms &  \\ \hline
+
+    unless & The else portion of the if construct 
+           & \texttt{(unless condition A B C)} \\ 
+
+           & & \\ \hline
+
+    and    & Combining conditionals to build & \texttt{(and A B C ... )} \\
+    or     & complex conditional & \texttt{(or A B C ...)} \\
+    not    &                             & \texttt{(not A)} \\ \hline
+
+    while  & Iteration & \texttt{(while condition forms...)} \\ \hline
+
+  \end{tabular}
+  \caption{A representative sample of various types of control contructs
+          available in Lisp.}
+  \label{tab:controls}
+\end{table}
+
+\section{Macros}
+
+There are many topics not covered here as yet.  Macros are, perhaps, the most
+important of these.  I hope to write a brief introduction to macros at a later
+date as time permits.  ``Macros'' allow one to define new control constructs
+and other language features.  A macro is defined much like a function, but
+instead of telling how to compute a value, it tells how to compute another Lisp
+expression which will in turn compute the value.  We call this expression the
+"expansion" of the macro.  As we know a lisp program is made up of series of
+expressions, macros are effectively a Lisp tool to write Lisp programs.  Any
+further attempt to expand these ideas is likely to explode into a multiple page
+essay; so let's stop here.  You should refer to the manuals distributed along
+with Emacs, in particular, \textit{The Elisp Reference Manual}, if you cannot
+control your curiosity :)
+
+Adios.
+
+
+\end{document}

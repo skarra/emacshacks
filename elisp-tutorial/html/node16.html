@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Global and 'Local' Variables</TITLE>
+<META NAME="description" CONTENT="Global and 'Local' Variables">
+<META NAME="keywords" CONTENT="tutorial">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="tutorial.css">
+<LINK REL="previous" HREF="node15.html">
+<LINK REL="up" HREF="node14.html">
+<LINK REL="next" HREF="node17.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html197"
+ HREF="node17.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html195"
+ HREF="node14.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html191"
+ HREF="node15.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html198"
+ HREF="node17.html">Scoping Rules</A>
+<B> Up:</B> <A NAME="tex2html196"
+ HREF="node14.html">Variable Operations</A>
+<B> Previous:</B> <A NAME="tex2html192"
+ HREF="node15.html">Defining Variables</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H3><A NAME="SECTION00082200000000000000">
+Global and 'Local' Variables</A>
+</H3>
+
+<P>
+We have talked of three ways of bringing variables into existence -
+<TT>defvar</TT> <TT>defconst</TT> <TT>setq</TT>.  The variables born thus will
+be in the global namespace - exactly like global variables in C.  This means
+even if your first <TT>setq</TT> on a variable is in the body of a
+<TT>defun</TT>, once the function gets executed the variable, and the set value
+will be `visible' to all.
+
+<P>
+It is possible to create local variables that exist temporarily-only until a
+certain part of the program finishes.  In fact, such temporary local variables
+get created automatically for functions with arguments.  The local variables
+are assigned values from the function invocation, and after the function
+returns their old values are restored.  If a variable does not exist outside
+the function, but is used as a function argument, once the function returns, it
+will remain undefined.  In other words, the arguments of a function get
+<I>new bindings</I> and the previous values are <I>shadowed</I>.
+
+<P>
+It is possible to give variables a new binding at arbitrary point in your
+program by using the <TT>let</TT> special form.  The syntax of a <TT>let</TT>
+form is something like this:
+
+<P>
+<PRE>
+(let ((variable-1 10)
+      (variable-2 "abcd"))
+  (...))
+</PRE>
+<P>
+The above <TT>let</TT> form provides new binding to two variables.  The new
+bindings last until execution exits from the <TT>let</TT> form.  <TT>let</TT>
+forms can be nested; however, there is a limit on the maximum number of nested
+bindings an individual variable can have.  This limit is specified by the value
+of <TT>max-specpdl-size</TT>.
+
+<P>
+<TT>setq</TT> alters the value of the inner-most binding.  If there are no
+local bindings, then it alters the global value.  This rule is called ``dynamic
+scoping''.  We examine the variable scoping rules in a little more detail in
+the next section.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html197"
+ HREF="node17.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html195"
+ HREF="node14.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html191"
+ HREF="node15.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html198"
+ HREF="node17.html">Scoping Rules</A>
+<B> Up:</B> <A NAME="tex2html196"
+ HREF="node14.html">Variable Operations</A>
+<B> Previous:</B> <A NAME="tex2html192"
+ HREF="node15.html">Defining Variables</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Sriram Karra</I>
+<BR><I>2005-01-06</I>
+</ADDRESS>
+</BODY>
+</HTML>

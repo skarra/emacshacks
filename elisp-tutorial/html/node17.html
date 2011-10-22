@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Scoping Rules</TITLE>
+<META NAME="description" CONTENT="Scoping Rules">
+<META NAME="keywords" CONTENT="tutorial">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="tutorial.css">
+<LINK REL="previous" HREF="node14.html">
+<LINK REL="up" HREF="node12.html">
+<LINK REL="next" HREF="node18.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html205"
+ HREF="node18.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html203"
+ HREF="node12.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html199"
+ HREF="node16.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html206"
+ HREF="node18.html">Lisp Objects and Data</A>
+<B> Up:</B> <A NAME="tex2html204"
+ HREF="node12.html">Variables</A>
+<B> Previous:</B> <A NAME="tex2html200"
+ HREF="node16.html">Global and 'Local' Variables</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00083000000000000000">
+Scoping Rules</A>
+</H2>
+
+<P>
+The Elisp manual says <I>Local bindings in Emacs Lisp have ``indefinite
+  scope'' and ``dynamic extent''.  "Scope" refers to <U>where</U>
+  textually in the source code the binding can be accessed.  "Indefinite scope"
+  means that any part of the program can potentially access the variable
+  binding.  "Extent" refers to <U>when</U>, as the program is executing,
+  the binding exists.  "Dynamic extent" means that the binding lasts as long as
+  the activation of the construct that established it.</I>
+
+<P>
+You can use that to impress your friends; if you can say it with a straight
+face.  But, what does it really mean?  The heart of the matter is that if you
+look at a lisp function definition, say, and find some variables used, for
+which no binding is apparent in the function itself, there is no cause for
+worry.  It is alright as long as <I>at the time of execution of that
+  function</I> the variable has a binding.  This is very different from a
+language like C, where a variable should have a binding in the same textual
+block as the usage.
+
+<P>
+<PRE>
+(defun foo ()
+   (message "bar is \%s" bar))
+(let ((bar "foo"))
+  (foo))
+</PRE>
+<P>
+In the above example, function <TT>foo</TT> is using <TT>bar</TT> which appears
+to be a <I>free variable</I>.  When <TT>foo</TT> is invoked as shown inside a
+let statement, <TT>foo</TT> gets bound to a value, although the place of usage
+is inside another function.  If, however, <TT>foo</TT> is invoked without
+providing a local binding as shown, then there will be a runtime error pointing
+out that <TT>foo</TT> has no binding.
+
+<P>
+Common Lisp is a complicated beast.  Its variables can have either lexical
+scope (i.e. C like scoping behaviour), or dynamic scoping (explained above).
+Elisp has only dynamic scoping.
+
+<P>
+If you really want to know more about scoping and really want to get more
+confused, you should feel free to refer to the Elisp manual.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html205"
+ HREF="node18.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html203"
+ HREF="node12.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html199"
+ HREF="node16.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html206"
+ HREF="node18.html">Lisp Objects and Data</A>
+<B> Up:</B> <A NAME="tex2html204"
+ HREF="node12.html">Variables</A>
+<B> Previous:</B> <A NAME="tex2html200"
+ HREF="node16.html">Global and 'Local' Variables</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Sriram Karra</I>
+<BR><I>2005-01-06</I>
+</ADDRESS>
+</BODY>
+</HTML>

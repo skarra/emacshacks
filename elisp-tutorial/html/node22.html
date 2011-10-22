@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Truth Values</TITLE>
+<META NAME="description" CONTENT="Truth Values">
+<META NAME="keywords" CONTENT="tutorial">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="tutorial.css">
+<LINK REL="next" HREF="node23.html">
+<LINK REL="previous" HREF="node21.html">
+<LINK REL="up" HREF="node21.html">
+<LINK REL="next" HREF="node23.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html257"
+ HREF="node23.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html255"
+ HREF="node21.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html249"
+ HREF="node21.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html258"
+ HREF="node23.html">Control Structures</A>
+<B> Up:</B> <A NAME="tex2html256"
+ HREF="node21.html">Misellaneous Topics</A>
+<B> Previous:</B> <A NAME="tex2html250"
+ HREF="node21.html">Misellaneous Topics</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000101000000000000000">
+Truth Values</A>
+</H2>
+
+<P>
+We mentioned in an earlier section that <TT>nil</TT> in Lisp denotes the
+logical truth value FALSE.  To be more precise, the term <TT>nil</TT> has three
+separate meanings: it is a <I>symbol</I> with the name 'nil'; it is the
+logical truth value <I>false</I>; and it is the empty list - the list of
+zero elements.  It can also be used wherever a variable is expected, in which
+case its value is always <TT>nil</TT>.
+
+<P>
+From the Lisp interpreter's point of view, there is absolutely no difference
+between <TT>nil</TT>, and <TT>()</TT>.  These two textual symbols appear the
+same to the Lisp system; in other words, they are two different textual
+representations of the same Lisp object.  In practise, you would find folks
+using <TT>nil</TT> to emphasise the truth value FALSE, and <TT>()</TT> is used
+to emphasise the empty list.
+
+<P>
+Just as in C any non-zero value is considered as TRUE in a conditional
+expression, in Lisp any non-<TT>nil</TT> value is considered as TRUE.  Be that
+as it may, we also have a symbol <TT>t</TT>, which is used widely, <I>per
+  convention</I> as the generic TRUE truth value.
+
+<P>
+The symbols <TT>nil</TT> and <TT>t</TT> are unique in one very interesting way
+- you never <B>need</B> to quote them.  This is because they always evaulate
+to themselves.  Take some time out and reflect on that.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html257"
+ HREF="node23.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html255"
+ HREF="node21.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html249"
+ HREF="node21.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html258"
+ HREF="node23.html">Control Structures</A>
+<B> Up:</B> <A NAME="tex2html256"
+ HREF="node21.html">Misellaneous Topics</A>
+<B> Previous:</B> <A NAME="tex2html250"
+ HREF="node21.html">Misellaneous Topics</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Sriram Karra</I>
+<BR><I>2005-01-06</I>
+</ADDRESS>
+</BODY>
+</HTML>

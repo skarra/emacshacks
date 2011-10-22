@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Control Structures</TITLE>
+<META NAME="description" CONTENT="Control Structures">
+<META NAME="keywords" CONTENT="tutorial">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="tutorial.css">
+<LINK REL="previous" HREF="node22.html">
+<LINK REL="up" HREF="node21.html">
+<LINK REL="next" HREF="node24.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html265"
+ HREF="node24.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html263"
+ HREF="node21.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html259"
+ HREF="node22.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html266"
+ HREF="node24.html">Macros</A>
+<B> Up:</B> <A NAME="tex2html264"
+ HREF="node21.html">Misellaneous Topics</A>
+<B> Previous:</B> <A NAME="tex2html260"
+ HREF="node22.html">Truth Values</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION000102000000000000000">
+Control Structures</A>
+</H2>
+
+<P>
+Although a Lisp program is a sequence of expressions, life would be quit boring
+if we could not, somehow, alter the flow of control to go ``non-linearly''.
+Lisp has almost all the usual control constructs one finds in other high level
+languages, like varieties of sequencing, conditional contructs, iteration, and
+some form of ``jumps''.  The one missing contruct is the <TT>for</TT> loop.  As
+we have already seen in an earlier section, all of these contructs are
+implemented as special forms.  Table <A HREF="node23.html#tab:controls">4</A> shows some of the
+control constructs available and some examples.
+
+<P>
+<BR>
+<DIV ALIGN="CENTER"><A NAME="284">&#160;</A>
+<TABLE>
+<CAPTION><STRONG>Table 4:</STRONG>
+A representative sample of various types of control contructs
+          available in Lisp.</CAPTION>
+<TR><TD>
+    <TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT">progn</TD>
+<TD ALIGN="LEFT">Sequential evaluation.  Used when you</TD>
+<TD ALIGN="LEFT">(progn (message ``1.'')</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">really want multiple forms  where only one</TD>
+<TD ALIGN="LEFT">(message ``2.'')</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">is allowed</TD>
+<TD ALIGN="LEFT">(message ``3''))</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><P>
+if</TD>
+<TD ALIGN="LEFT">The usual thing</TD>
+<TD ALIGN="LEFT"><TT>(if condition</TT></TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT"><TT>    then-form </TT></TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT"><TT>   else-forms)</TT></TD>
+</TR>
+<TR><TD ALIGN="LEFT"><P>
+when</TD>
+<TD ALIGN="LEFT">Just the 'if' portion of an if contruct but</TD>
+<TD ALIGN="LEFT"><TT>(when condition A B C)</TT></TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">allows multiple forms</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><P>
+unless</TD>
+<TD ALIGN="LEFT">The else portion of the if construct</TD>
+<TD ALIGN="LEFT"><TT>(unless condition A B C)</TT></TD>
+</TR>
+<TR><TD ALIGN="LEFT"><P></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT"><P>
+and</TD>
+<TD ALIGN="LEFT">Combining conditionals to build</TD>
+<TD ALIGN="LEFT"><TT>(and A B C ... )</TT></TD>
+</TR>
+<TR><TD ALIGN="LEFT">or</TD>
+<TD ALIGN="LEFT">complex conditional</TD>
+<TD ALIGN="LEFT"><TT>(or A B C ...)</TT></TD>
+</TR>
+<TR><TD ALIGN="LEFT">not</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT"><TT>(not A)</TT></TD>
+</TR>
+<TR><TD ALIGN="LEFT"><P>
+while</TD>
+<TD ALIGN="LEFT">Iteration</TD>
+<TD ALIGN="LEFT"><TT>(while condition forms...)</TT></TD>
+</TR>
+<TR><TD ALIGN="LEFT"><P></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+</TABLE>  
+  <A NAME="tab:controls">&#160;</A></TD></TR>
+</TABLE>
+</DIV>
+<BR>
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html265"
+ HREF="node24.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html263"
+ HREF="node21.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html259"
+ HREF="node22.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html266"
+ HREF="node24.html">Macros</A>
+<B> Up:</B> <A NAME="tex2html264"
+ HREF="node21.html">Misellaneous Topics</A>
+<B> Previous:</B> <A NAME="tex2html260"
+ HREF="node22.html">Truth Values</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Sriram Karra</I>
+<BR><I>2005-01-06</I>
+</ADDRESS>
+</BODY>
+</HTML>

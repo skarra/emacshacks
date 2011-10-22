@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Evaluating Expressions</TITLE>
+<META NAME="description" CONTENT="Evaluating Expressions">
+<META NAME="keywords" CONTENT="tutorial">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="tutorial.css">
+<LINK REL="next" HREF="node5.html">
+<LINK REL="previous" HREF="node3.html">
+<LINK REL="up" HREF="tutorial.html">
+<LINK REL="next" HREF="node5.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html70"
+ HREF="node5.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html68"
+ HREF="tutorial.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html62"
+ HREF="node3.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html71"
+ HREF="node5.html">Functions</A>
+<B> Up:</B> <A NAME="tex2html69"
+ HREF="tutorial.html">Emacs Lisp, The Language</A>
+<B> Previous:</B> <A NAME="tex2html63"
+ HREF="node3.html">Expressions - building blocks</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00040000000000000000">
+Evaluating Expressions</A>
+</H1>
+
+<P>
+As we noted earlier, an expression is a distinct building block of a lisp
+program.  We can think of ``evaluating an expression'' as the act of executing
+the expression and obtaining its value.  Strictly speaking, when an expression
+is evaluated, two distinct things happen: firstly the text of the expression is
+read by what is called the ``Lisp Reader'' which produces an internal
+representation called the ``Lisp object'', secondly this produced object is
+evaluated and a vale is returned.  The distinction between these two processes
+is not important most of the time.  But knowing about the difference will help
+understand things better as you become more proficient in Lisp.
+
+<P>
+What happens when you evaluate a particular expression depends on the type of
+expression.  For a <TT>Type (1)</TT> expression, the value of the variable is
+the result.  If the expression is of <TT>Type (2)</TT> then the result is the
+constant itself.  i.e. if <TT>10</TT> is evaluated, the result is <TT>10</TT>.
+If the expression being evaluated is of <TT>Type (3)</TT>, then a function call
+is made.  The value of such an expression is the return value of the function.
+Function calls are explored in greater detail in the following section.  If the
+expression, on the other hand, is a ``quoted expression'', i.e. of Type
+<TT>(4)</TT> or Type <TT>(5)</TT>, then evaluation is inhibited.  For e.g. in
+<TT>(set 'foo 10)</TT> <TT>'foo</TT> is a quoted expression.  Here, we want to
+pass the <I>variable itself</I> to the function, rather than its value.  So,
+we want to inhibit the evaluation of the expression <TT>foo</TT> before the
+function <TT>set</TT> is called.  To accomplish this, we put a quote character
+before <TT>foo</TT>, thereby telling the lisp interpreter to return the
+expression itself, rather than the <I>value</I> of the expression.  To say it
+a little differently, the value of a quoted expression is the expression itself
+(or more correctly, the lisp object corresponding to the expression; more on
+this later)
+
+<P>
+A solid understanding of quoted expressions is key if you want to program in
+Lisp at any level and, as a result, exploit the customisability of Emacs.  It
+is to the Lisp programmer, what understanding pointers is to a C programmer.
+As such, it is worth spending some more time on the topic.
+
+<P>
+Consider the English sentence: <I>Madras has six letters</I>.  The sentence
+is ambiguous.  Does the statement make a reference to the number of missives
+present in all post offices of the city called Madras, or does it point out to
+the reader, the total number of letters of the English alphabet making up the
+word Madras?  Two things contribute to this ambiguity - the multiple meanings
+of the word <I>letter</I>, and far more relevant to this discussion - the
+potential for ambiguous parsing of the symbol <I>Madras</I>.  When we write
+<I>Madras</I>, do we refer to a six letter word itself, or do we refer to a
+city of nearly 7 million inhabitants, the South Indian port city and capital of
+Dravidian state Tamil Nadu?  Generally, the surrounding context is enough to
+disambiguate.  However, the potential to confuse remains, as seen above.
+
+<P>
+This problem is generally solved by enclosing the problematic term in quotation
+marks when the reference is to the symbol itself, and use the term plainly when
+the reference is to the object it nominally denotes.  That is, we would say
+<I>``Madras'' has six letters</I> if we want to refer to just the word
+without invoking any related connotations.  And <I>Madras has six letters</I>
+will refer to the City.  What we have done is made use of quoting.
+
+<P>
+In this sense, a quoted expression in Lisp refers to the Lisp object itself
+that makes up the expression rather than the value of the expression.  The Lisp
+interpreter will not evaluate a quoted expression, just as humans refrain from
+attributing meaning to a word in an English sentence enclosed in quotes.
+
+<P>
+Finally, a note for the advanced reader.  As noted earlier, Type (4) and Type
+(5) expressions are largely similar.  The only difference between the two,
+apart from the obvious difference of using different ticks used to quote, is
+that if a Type (5) expression is a quoted list, then there are ways to
+selectively allow some of list elements to be evaluated and used in the quoted
+expression.  If that is not enlightening, do not worry.  This difference is
+important only when using an advanced lisp programming feature called Macros.
+We do not talk about macros in this tutorial, so we do not need to concern
+ourselves about it here.
+
+<P>
+If you want to test out some expressions and evaluate them, go to the *scratch*
+buffer in emacs, type an expression, move cursor to the end of your expression
+and type C-x C-e.  This will evaluate the expression and print the result in
+the mini-buffer.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html70"
+ HREF="node5.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html68"
+ HREF="tutorial.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html62"
+ HREF="node3.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html71"
+ HREF="node5.html">Functions</A>
+<B> Up:</B> <A NAME="tex2html69"
+ HREF="tutorial.html">Emacs Lisp, The Language</A>
+<B> Previous:</B> <A NAME="tex2html63"
+ HREF="node3.html">Expressions - building blocks</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Sriram Karra</I>
+<BR><I>2005-01-06</I>
+</ADDRESS>
+</BODY>
+</HTML>

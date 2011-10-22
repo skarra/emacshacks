@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Defining Functions</TITLE>
+<META NAME="description" CONTENT="Defining Functions">
+<META NAME="keywords" CONTENT="tutorial">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="tutorial.css">
+<LINK REL="next" HREF="node8.html">
+<LINK REL="previous" HREF="node6.html">
+<LINK REL="up" HREF="node5.html">
+<LINK REL="next" HREF="node8.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html104"
+ HREF="node8.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html102"
+ HREF="node5.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html96"
+ HREF="node6.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html105"
+ HREF="node8.html">Anonymous Functions</A>
+<B> Up:</B> <A NAME="tex2html103"
+ HREF="node5.html">Functions</A>
+<B> Previous:</B> <A NAME="tex2html97"
+ HREF="node6.html">Calling Functions</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00052000000000000000">
+Defining Functions</A>
+</H2>
+
+<P>
+It's all well that we can call functions, but how the hell do we define some of
+our own?  In this section we will address this question.  As always, a simple
+example will convey the essence quite readily.  Consider the following lisp
+expression:
+
+<P>
+<PRE>
+(defun foo ()
+  (message "Hello World\n")
+  (message "Hello world once again!\n"))
+</PRE>
+<P>
+Note: <TT>message</TT> is a built-in function in Elisp that prints a string in
+the Emacs mini-buffer area (the bottom-most line in an Emacs window; this area
+is used to accept input for emacs commands and as an echo area to report
+command output and errors).
+
+<P>
+A function is a sequence of lisp expressions clubbed together, and typically
+referred to with a name.  In the above example, <TT>foo</TT> is the name of a
+function that contains two expressions.  The declaration starts from the
+bracket to the immediate left of the <TT>defun</TT> keyword to the
+corresponding close bracket.  You must note, and rest reassured, that such a
+declaration itself conforms to the format of a type 3 expression.  There is
+nothing particularly magical about the syntax of a function declaration in
+lisp, only the text is formatted a little weird, and you can say the positional
+arguments have some specific significance.  So, if you want to try your hand at
+declaring a function, type out the above example, and do the C-x C-e routine as
+explained earlier.
+
+<P>
+Let us look at another example:
+
+<P>
+<PRE>
+(defun factorial (n)
+  (if (&lt;= n 0)
+      1
+    (* n (factorial (- n 1)))))
+</PRE>
+<P>
+This is an implementation of the factorial algorithm.  Note that the function
+body contains only one expression (the <TT>if</TT> expression.) which is split
+across multiple lines.  The <TT>(n)</TT> in the first line of the declaration
+specifies the formal parameter list for this function.  In this case, there is
+only one; if a function needs to take multiple parameters, the names must be
+specified inside the brackets and separated by white space.  One also notes
+that the types of parameters are not declared anywhere.  In fact, this is a
+feature of lisp in general.  Lisp has ``latent types'', which contrasts with
+``manifest types'' of other procedural languages; one might also say that Lisp
+is a dynamically typed language where the type of a variable is determined only
+at the time of its evaluation.  This dynamic nature of the type system means
+``generic programming'' comes for free in Lisp.  Just think of those poor sods
+struggling with templates... sigh.
+
+<P>
+Note that there is no such a thing as a ``return'' statement or expression in
+lisp.  The value of the last evaluated expression in the function is the return
+value of the function.  So, in the above example, the return value of
+<TT>foo</TT> is whatever the second <TT>message</TT> call returns (BTW, message
+just returns the string it printed out).
+
+<P>
+The key thing that differentiates a function declaration from other
+expressions, of course, is the word <TT>defun</TT>.  When the expression
+declaring a function is evaluated, that function name is registered with the
+lisp interpreter as a valid function with a body.  If you want to change the
+definition of a function, just write a new defun and eval it.  That's it.  The
+old definition will be replaced with your new version.  This is one way to
+'customise' your Emacs session - by overriding internal Emacs functions with
+your own; although I must point out that it is not the best of the available
+options :-)
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html104"
+ HREF="node8.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html102"
+ HREF="node5.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html96"
+ HREF="node6.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html105"
+ HREF="node8.html">Anonymous Functions</A>
+<B> Up:</B> <A NAME="tex2html103"
+ HREF="node5.html">Functions</A>
+<B> Previous:</B> <A NAME="tex2html97"
+ HREF="node6.html">Calling Functions</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Sriram Karra</I>
+<BR><I>2005-01-06</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,332 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Expressions - building blocks of a lisp program</TITLE>
+<META NAME="description" CONTENT="Expressions - building blocks of a lisp program">
+<META NAME="keywords" CONTENT="tutorial">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="tutorial.css">
+<LINK REL="next" HREF="node4.html">
+<LINK REL="previous" HREF="node2.html">
+<LINK REL="up" HREF="tutorial.html">
+<LINK REL="next" HREF="node4.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html60"
+ HREF="node4.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html58"
+ HREF="tutorial.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html52"
+ HREF="node2.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html61"
+ HREF="node4.html">Evaluating Expressions</A>
+<B> Up:</B> <A NAME="tex2html59"
+ HREF="tutorial.html">Emacs Lisp, The Language</A>
+<B> Previous:</B> <A NAME="tex2html53"
+ HREF="node2.html">Introduction</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00030000000000000000">
+Expressions - building blocks of a lisp program</A>
+</H1>
+
+<P>
+A Lisp program is made up of a sequence of expressions.  ``Running'' the
+program is equivalent to ``evaluating'' the expressions sequentially.  In this
+section we look at the syntax of a lisp expression, i.e. how to write
+expressions and do various useful things with them.
+
+<P>
+<BR>
+<DIV ALIGN="CENTER"><A NAME="290">&#160;</A>
+<TABLE>
+<CAPTION><STRONG>Table 1:</STRONG>
+Different types of Lisp expressions.  The <TT>(</TT>,
+       <TT>'</TT>, <TT>`</TT> symbols are part of the syntax.
+       Except for some rules like what constitutes a valid <I>identifier</I>,
+       and certain other extremely abstruse syntactic tokens, the above table
+       shows almost the entire syntax of Emacs Lisp.</CAPTION>
+<TR><TD>
+    <TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT">expr</TD>
+<TD ALIGN="LEFT">::=</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TH ALIGN="LEFT"><I>identifer</I></TH>
+<TD ALIGN="LEFT">............ (1)</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT"><IMG
+ WIDTH="9" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$\vert$"></TD>
+<TD ALIGN="LEFT"><I>constant or literal</I></TD>
+<TD ALIGN="LEFT">............ (2)</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT"><IMG
+ WIDTH="9" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$\vert$"></TD>
+<TD ALIGN="LEFT">( expr* )</TD>
+<TD ALIGN="LEFT">............ (3)</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT"><IMG
+ WIDTH="9" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$\vert$"></TD>
+<TD ALIGN="LEFT">'expr</TD>
+<TD ALIGN="LEFT">............ (4)</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT"><IMG
+ WIDTH="9" HEIGHT="31" ALIGN="MIDDLE" BORDER="0"
+ SRC="img1.gif"
+ ALT="$\vert$"></TD>
+<TD ALIGN="LEFT">`expr</TD>
+<TD ALIGN="LEFT">............ (5)</TD>
+</TR>
+</TABLE>  
+  <A NAME="tab:exprs">&#160;</A></TD></TR>
+</TABLE>
+</DIV>
+<BR>
+<P>
+Table <A HREF="node3.html#tab:exprs">1</A> lists the different types of expressions that are
+possible in Lisp.  
+
+<P>
+Instead of explaining the notation in words, a few examples here would do the
+job.  Table <A HREF="node3.html#tab:exprt">2</A> shows a set of examples for each of the types of
+expressions we have generically described above.  For now, you can just assume
+that Type <TT>5</TT> are identical to Type <TT>4</TT>.  Each of the sample
+expressions is a valid lisp expression, syntactically.  i.e. each of them can
+appear by themselves in a line of a valid lisp program.
+
+<P>
+Before we proceed let me tell you that what you see above is pretty close to
+the entire syntax of lisp expressions.  Considering that a lisp program is made
+up a sequence of expressions (and comments, if it is a good lisp program - a
+semicolon character starts a comment; the end of line terminates one), you have
+already learnt almost all there is to know to start writing full programs :-)
+Yes, it is not really complete, and there are a few things that are yet to be
+specified, like what constitutes a valid identifier name and such, the
+different ways in which numeric constants can be representation etc.  Such
+minor issues aside, you really do have, in the above table, practically all the
+ways in which you can build lisp expressions from the fundamental lexical
+elements.  Compare this to the horrendous nonsense that passes for the syntax
+of a ``modern'' high-level language like C++ or Java.
+
+<P>
+<BR>
+<DIV ALIGN="CENTER"><A NAME="291">&#160;</A>
+<TABLE>
+<CAPTION><STRONG>Table 2:</STRONG>
+Various expression types.  The designations <TT>Type (1),
+    Type (2)</TT></CAPTION>
+<TR><TD>
+    <TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT">Expression Type</TD>
+<TD ALIGN="LEFT">Sample Expressions</TD>
+<TD ALIGN="LEFT">Comment</TD>
+</TR>
+<TR><TD ALIGN="LEFT">Type (1)</TD>
+<TD ALIGN="LEFT"><TT>x</TT></TD>
+<TD ALIGN="LEFT">Identifiers</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT"><TT>foo</TT></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">Type (2)</TD>
+<TD ALIGN="LEFT"><TT>10</TT></TD>
+<TD ALIGN="LEFT">Literals</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT"><TT>5.8</TT></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT"><TT>"Hello World"</TT></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT"><TT>nil</TT></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">Type (3)</TD>
+<TD ALIGN="LEFT"><TT>()</TT></TD>
+<TD ALIGN="LEFT">Building complex expressions out</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT"><TT>(foo)</TT></TD>
+<TD ALIGN="LEFT">of other expressions</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT"><TT>(factorial 10)</TT></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT"><TT>(+ 10 2)</TT></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT"><TT>(setq foo 10)</TT></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT"><TT>(factorial (+ 10 2))</TT></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT"><TT>(if foo 1 0)</TT></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">Type (4)</TD>
+<TD ALIGN="LEFT"><TT>'(0 1 2)</TT></TD>
+<TD ALIGN="LEFT">Quoted expressions</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT"><TT>'foo</TT></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">Type (5)</TD>
+<TD ALIGN="LEFT"><TT>`(list (+ 1 2) 3)</TT></TD>
+<TD ALIGN="LEFT">&nbsp;</TD>
+</TR>
+</TABLE>   etc. are not standard.  I have labelled them such for
+    convenience of discourse here.
+  <A NAME="tab:exprt">&#160;</A></TD></TR>
+</TABLE>
+</DIV>
+<BR>
+<P>
+Type <TT>(1)</TT> expressions define identifiers, straightforward enough.
+
+<P>
+Type <TT>(2)</TT> expressions define literals.  A literal is nothing but a
+constant.  Constants are typically integers, floating points, strings and
+characters.  <TT>nil</TT> is a special literal.  You can think of it as the
+equivalent of the value ``false'' in Pascal or C++.  The opposite truth value
+of <TT>nil</TT> is represented by the symbol <TT>t</TT>.  We will have more to
+say about nil later.
+
+<P>
+Type <TT>(3)</TT> expressions: This rule just says ``zero or more expressions
+separated by white space and enclosed in brackets is an expression.'' This is
+the rule that can be used recursively to make increasingly complicated
+expressions, and is essentially the rule that gives the lisp-ish touch to a
+program's look and feel.
+
+<P>
+<TT>()</TT> is special and very different from the others listed above.  For
+now, just think of it as another way of writing <TT>nil</TT>.  We will have
+more to say about both when we talk about lists.
+
+<P>
+The expression <TT>(foo)</TT> is a function call to function <TT>foo</TT>.
+This is how function calls are written in lisp.  In fact, if any lisp
+expression (of Type (3) excluding <TT>()</TT>) is evaluated, then the first
+symbol inside the brackets has to be the name of a function.  The lisp
+interpreter flags an error otherwise.
+
+<P>
+Thus, <TT>(factorial 10)</TT> is a call to a function named <TT>factorial</TT>
+and we pass the value 10 as an argument.  By the same token, <TT>(+ 10 2)</TT>
+is a call to a function named <TT>+</TT> that takes two arguments.  ``But...'',
+you say, ``<TT>+</TT> is an operator, right?  What do you mean by ``a function
+named <TT>+</TT>'' ''.  This brings us to an interesting point about lisp.  In
+lisp, there is no difference between ``operators'' and ``functions''.  All of
+them are lisp functions defined somewhere.  What one would call an operator in
+Java or C++ is defined as a function in lisp.  <TT>+ - * / *= /= %</TT> are
+all lisp functions.  This particular feature of lisp is radically different
+from all other modern and popular procedural languages, and hence takes a
+little getting used to.  If you are a C++ programmer, now is a good time to
+disabuse yourself of any notion that operator overloading was invented by
+Dr. Stroustrup just for you.  The sections on Lisp handling of types will
+further rub in this truth.
+
+<P>
+Looking at these examples afresh in light of the information that operators and
+functions are one and the same, we can make a few key observations about a few
+other features of lisp.  The first is that lisp function names (all identifier
+names, actually) can contain ``special'' characters.  So, <TT>foo123, a++,
+this-&gt;sucks, my**lifez**great, foo_&amp;_bar, /, == </TT> are all valid names for
+variables and functions.  This is a refreshing change from the ``alpha numeric
+and underscore only'' limitation that somewhat restricts one's creative juices
+from flowing freely.
+
+<P>
+Secondly, we note that Lisp uses the prefix notation for arithmetic
+expressions.  I.e. while writing an arithmetic expression the ``operator''
+precedes the operands.  This is in contrast to the infix notation followed in C
+and the monstrosities that followed.  This prefix notation business is a little
+weird at the start, but it solves so many problems that it is very much worth
+the effort to get used to it.  Think about it: it wholly gets rid of precedence
+and associativity issues!  How is that for an elegant solution to a pesky
+problem that haunts generation after generation of programmers!
+
+<P>
+Thirdly, there is no real distinction between ``unary'', ``binary'',
+``ternary'' operators and so on.  This is good for the programmer, as there are
+fewer details to be worried about.  If you are a C programmer, can you tell me,
+quickly, what is computed by the following expression - <TT>i -- j;</TT>
+
+<P>
+The expression <TT>(setq foo 10)</TT>, has the same pattern of some other
+expressions listed, but is interesting for other reasons and hence I have
+listed it above.  <TT>setq</TT> is a predefined function that assigns values to
+variables.  In Lisp, you need not declare variables explicitly before you
+assign values to them, you can start by assigning values to any variable name,
+and that variable will be brought into existence if it is not already.  It
+suffices that you know this much for the time being.  More on variables, and
+assigning values to them, later.
+
+<P>
+We will deal with Type <TT>(4)</TT> and Type <TT>(5)</TT> expressions in the
+next section.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html60"
+ HREF="node4.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html58"
+ HREF="tutorial.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html52"
+ HREF="node2.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html61"
+ HREF="node4.html">Evaluating Expressions</A>
+<B> Up:</B> <A NAME="tex2html59"
+ HREF="tutorial.html">Emacs Lisp, The Language</A>
+<B> Previous:</B> <A NAME="tex2html53"
+ HREF="node2.html">Introduction</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Sriram Karra</I>
+<BR><I>2005-01-06</I>
+</ADDRESS>
+</BODY>
+</HTML>

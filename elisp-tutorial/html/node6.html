@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Calling Functions</TITLE>
+<META NAME="description" CONTENT="Calling Functions">
+<META NAME="keywords" CONTENT="tutorial">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="tutorial.css">
+<LINK REL="next" HREF="node7.html">
+<LINK REL="previous" HREF="node5.html">
+<LINK REL="up" HREF="node5.html">
+<LINK REL="next" HREF="node7.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html94"
+ HREF="node7.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html92"
+ HREF="node5.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html86"
+ HREF="node5.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html95"
+ HREF="node7.html">Defining Functions</A>
+<B> Up:</B> <A NAME="tex2html93"
+ HREF="node5.html">Functions</A>
+<B> Previous:</B> <A NAME="tex2html87"
+ HREF="node5.html">Functions</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00051000000000000000">
+Calling Functions</A>
+</H2>
+
+<P>
+As noted in a prior section, any lisp expression that is enclosed in brackets
+is a function call.  When such an expression is evaluated, the lisp interpreter
+looks at the very first expression inside the brackets and verifies that it is
+the name of an already defined function.  An error is signalled if it is not.
+After this error checking is out of the way, the remaining expressions inside
+the brackets are evaluated one at a time from left to right and a series of
+values are obtained for these expressions.  Once all such expressions are
+evaluated, the function call is made with these values as the arguments.  A few
+examples are a good idea.  Consider the following expression:
+
+<P>
+<TT>(+ 1 2)</TT>
+
+<P>
+When this expression is evaluated, the lisp interpreter first identifies as an
+expression of Type (3), and proceeds to check if <TT>+</TT>, the first
+expression inside the brackets, is the name of a predefined function.  In this
+case, it is.  Then it sees two expressions <TT>1</TT>, and <TT>2</TT> inside
+the brackets, and it proceeds to evaluate them both and obtain their values,
+and subsequently calls the function <TT>+</TT> with the values 1, and 2.  The
+return value of the function is the value of the expression as a whole.
+
+<P>
+Consider the following expression:
+
+<P>
+<TT>(+ (+ 1 1) foo)</TT>
+
+<P>
+This is a slight variation on the previous one.  The lisp interpreter
+identifies <TT>+</TT> as a defined function and then finds another <TT>Type
+  (3)</TT> expression <TT>(+ 1 1)</TT>.  The above process is repeated till its
+value is obtained.  Now the lisp interpreter sees the identifier <TT>foo</TT>,
+and evaluates it to obtain the value of the variable.  Finally it can call the
+<TT>+</TT> function with values 2 and value of <TT>foo</TT>.  The return value
+of the function is the value of the expression as a whole.
+
+<P>
+The moral of the story about function calls is simple: if an expression of
+<TT>Type (3)</TT> is evaluated, the first expression inside the brackets is a
+function and the rest are its arguments.  The argument expressions are all
+evaluated to values in turn before the function is called.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html94"
+ HREF="node7.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html92"
+ HREF="node5.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html86"
+ HREF="node5.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html95"
+ HREF="node7.html">Defining Functions</A>
+<B> Up:</B> <A NAME="tex2html93"
+ HREF="node5.html">Functions</A>
+<B> Previous:</B> <A NAME="tex2html87"
+ HREF="node5.html">Functions</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Sriram Karra</I>
+<BR><I>2005-01-06</I>
+</ADDRESS>
+</BODY>
+</HTML>

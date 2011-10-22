@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Symbols</TITLE>
+<META NAME="description" CONTENT="Symbols">
+<META NAME="keywords" CONTENT="tutorial">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="tutorial.css">
+<LINK REL="next" HREF="node14.html">
+<LINK REL="previous" HREF="node12.html">
+<LINK REL="up" HREF="node12.html">
+<LINK REL="next" HREF="node14.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html167"
+ HREF="node14.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html165"
+ HREF="node12.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html159"
+ HREF="node12.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html168"
+ HREF="node14.html">Variable Operations</A>
+<B> Up:</B> <A NAME="tex2html166"
+ HREF="node12.html">Variables</A>
+<B> Previous:</B> <A NAME="tex2html160"
+ HREF="node12.html">Variables</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00081000000000000000">
+Symbols</A>
+</H2>
+
+<P>
+In other languages one has ``variables''.  In Lisp we have ``symbols''.
+Symbols are named locations.  What can go into that location is quite different
+and intriguing.  One can visualise a symbol as shown in Table <A HREF="node13.html#tab:sym">3</A>
+
+<P>
+<BR>
+<DIV ALIGN="CENTER"><A NAME="168">&#160;</A>
+<TABLE>
+<CAPTION><STRONG>Table 3:</STRONG>
+The parts of a Lisp Symbol.</CAPTION>
+<TR><TD>
+    <TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT">name</TD>
+<TD ALIGN="LEFT">value as a</TD>
+<TD ALIGN="LEFT">definition as</TD>
+<TD ALIGN="LEFT">space for</TD>
+</TR>
+<TR><TD ALIGN="LEFT">&nbsp;</TD>
+<TD ALIGN="LEFT">variable</TD>
+<TD ALIGN="LEFT">a function</TD>
+<TD ALIGN="LEFT">property lists</TD>
+</TR>
+</TABLE>  
+  <A NAME="tab:sym">&#160;</A></TD></TR>
+</TABLE>
+</DIV>
+<BR>
+<P>
+A symbol object in Lisp is the whole thing with all four ``cells''.  The most
+striking feature of a symbol is that there are distinct cells to hold its value
+as a variable and its value as function definition.  What this means is that
+any name can have both kind of bindings.  In other words, <TT>foo</TT> can have
+the value 10 associated with it, and can also have some function definition.
+There are predefined functions in Elisp to access the different cells of a
+symbol.  <TT>(setq foo 10)</TT> will assign the value 10 to <TT>foo</TT>'s
+variable cell.  <TT>(fset 'foo 'bar)</TT> will assign the function definition
+of <TT>bar</TT> to <TT>foo</TT>.  Note that these are not the only ways to
+accomplish this effect.
+
+<P>
+You may ask, reasonably, ``if the same name can act as a variable and a
+function, will it not create problems at run-time?''  It turns out not to be a
+problem.  The lisp interpreter is able to tell unambiguously when a symbol
+should be accessed as a variable and when it should be accessed as a function.
+The simple rule is this: if a (non-quoted) symbol is the first expression
+inside a bracketed expression, then it should be accessed as a function, and in
+all other cases, it should be accessed as a variable.  So, assuming
+<TT>foo</TT> has both variable and function bindings, the first example
+accesses foo as a function and the second example as a variable
+
+<P>
+<PRE>
+(foo 10)
+(bar (+ foo 10))
+</PRE>
+<P>
+A symbol has a fourth cell: some space to hold property lists.  This is a
+convenient place to hold name/value pair property data relevant to the symbol.
+For e.g. many Elisp commands come disabled by default.  when a disabled Elisp
+command is invoked, Emacs prompts the user and asks him if he really intended
+to invoke this command and whether the command should be enabled for all future
+sessions etc.  The information about the disabled/enabled state is maintained
+in the fourth cell of the symbol.  This is just one example to give you an idea
+about the usefulness of this property list business.  For the curious folks,
+<TT>put</TT> and <TT>get</TT> are the Elisp functions that can be used to
+access the property-list area of a symbol.  We shall not go into them in any
+more detail.
+
+<P>
+To sum it up, a Lisp symbol can have both a variable binding and a function
+binding.  When one just talks about 'variables', one refers to the variable
+binding of the symbol.  With that understanding, let's look at the most
+important thing one needs to know about what Elisp lets us to with them.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html167"
+ HREF="node14.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html165"
+ HREF="node12.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html159"
+ HREF="node12.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html168"
+ HREF="node14.html">Variable Operations</A>
+<B> Up:</B> <A NAME="tex2html166"
+ HREF="node12.html">Variables</A>
+<B> Previous:</B> <A NAME="tex2html160"
+ HREF="node12.html">Variables</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Sriram Karra</I>
+<BR><I>2005-01-06</I>
+</ADDRESS>
+</BODY>
+</HTML>

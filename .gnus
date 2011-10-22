@@ -1,0 +1,660 @@
+;;; -*-emacs-lisp-*- Gnus startup file.
+
+;; Sriram Karra
+;;
+;; Created: Febraury 2, 2001
+;;
+;; $Id: .gnus,v 1.12 2004/11/02 03:35:17 karra Exp $
+;;
+;; This is the customisation file for the gnus mail/news reader for
+;; emacs.  This is my first full blown attempt to use gnus...  had to
+;; happen sometime...
+
+;;; Some Basic Stuff
+
+;; the goal is to attain expert status in using gnus...  You should set
+;; the following variable if you are one.  I have still not reached that
+;; stage... (this is more than just a big sweet smelling fart: an expert
+;; user is not pained with rather silly confirmation messages and so
+;; forth
+;; - so use with care)
+(setq gnus-expert t)
+
+(require 'apropos)
+;; (when (apropos-macrop 'byte-compile-nonsense)
+;;   (macroexpand '(byte-compile-nonsense "~/.gnus" t)))
+
+;; Setup the stuff needed to read mail using gnus Update: May 21 2001. I
+;; decided that we have had enough of the slow nnbabyl nonsense.  The
+;; #mails just grows like crazy and I cannot forsee a situation where I
+;; will be forced to use Rmail in an emergeny.  So, I have shifted to
+;; the much faster nnml backend.  (It takes more disk space).
+;; (setq gnus-secondary-select-methods
+;;       '((nnbabyl "private")))
+
+(setq gnus-secondary-select-methods
+      '((nnml "private")))
+
+;;; Groups split rules and posting style specification.
+
+;; one of the mail reasons I have decided to jump the RMAIL ship is that
+;; gnus promises to do some excellent filtering, and produce mail in a
+;; "threaded" fashion.  This would make life that much easier with the
+;; cs5470 mails.  So, go ahead and setup the filtering stuff.
+
+(setq message-subscribed-regexps
+      `("cs[0-9]*@cs\\.utah\\.edu"
+	"linux-india-[a-z]+@lists\\.sourceforge\\.net"
+	"cecri-dist@\\(egroups\\|yahoogroups\\)\\.com"
+	"batch98@\\(egroups\\|yahoogroups\\)\\.com"))
+
+(setq message-subscribed-addresses
+      '("ding@gnus.org"
+	"gnus-tutorial@gnus.org"
+	"doublefool@yahoogroups.com"
+	"streetend@yahoogroups.com"
+	"isa@cs.utah.edu"))
+
+;; setup the different posting styles.  I think it suffices for now just to
+;; set the From: header
+(setq gnus-posting-styles
+      '((".*"
+	 (signature-file "~/.signature")
+	 (name mail-user-name)	       ; set somewhere in .customs.emacs
+	 (address "karra@shakti.homelinux.net"))
+
+	(".*intel"
+;	 (address "sriram.karra@intel.com")
+;	 (Organization "Intel Corporation")
+	 )
+
+	("hcl-cisco"
+	 (address "skarra@cisco.com")
+	 (Organization "HCL Technologies, Cisco ODC."))
+
+	("batch"
+	 (name "Naresh Narasimhan"))
+;	 (address "karra@shakti.homelinux.net")
+
+;; 	("eng.utah"
+;; 	 (address "karra@shakti.homelinux.net"))
+
+;; 	("streetend"
+;; 	 (address "karra@shakti.homelinux.net"))
+
+;; 	("ISA"
+;; 	 (address "sriramkarra@yahoo.com"))
+
+	("yahoo"
+	 (address "sriramkarra@yahoo.com"))
+
+;; 	("doublefool"
+;; 	 (address "karra@shakti.homelinux.net"))
+
+	("^LI."
+	 (name "Karra, Sriram")
+;	 (address "karra@shakti.homelinux.net")
+	 (signature
+	  "Life sans X sounds just as bad as life sans SeX."))
+
+	("apollo"
+	 (name "Sriram Karra")
+	 (address "ksriram@prodapt.com")
+	 (organization "Prodapt India Ltd."))
+
+;; 	("ilugc"
+;; 	 (address "karra@shakti.homelinux.net"))	
+
+;; 	("dotGNU"
+;; 	 (name "Sriram Karra")
+;; 	 (address "karra@shakti.homelinux.net")
+;; 	 (Organization "The Klingon High Council"))
+
+	))
+
+;;; Mail source specifications
+
+;; for security reasons, we have moved the pop sources (and their
+;; passwords) to another file that is only readable by us.
+
+(condition-case err
+    (load-file (expand-file-name "~/.gnus.private"))
+  (error
+   (defvar my-all-mail-sources '((file))
+     "Value used to initialise the gnus variable `mail-sources'.
+A value of (file) only means that mail will be fetched only from
+the local mail spool.  ")))
+
+(unless (boundp 'whereami)
+  (defvar whereami nil))
+
+;; setup the pop account in case of the windows-nt (at the moment we're in
+;; Intel) -- Stuff of this sort shold perhaps be in ~/.mach-dep, but I do
+;; not recall now (after a month of setting it up) why it is here... So,
+;; let's leave it as is :)
+(cond
+
+ ;; In Madras, with my Debian box, there is no news source, three pop
+ ;; mail sources and a local spool source.  Exim takes care of our
+ ;; outgoing mail, so we need not resort to smtp.el stuff (as used in
+ ;; other configs.)
+
+ ((eq whereami 'madras-laptop)
+  (setq gnus-select-method "news")
+  (setq mail-sources my-all-mail-sources))
+
+ ;; AT HCL, I have a dual boot.  Shortly, I hope to have my mail on a
+ ;; shared FAT32 partititon, in which case we can have our mail
+ ;; conveniently shared as well.  So, we need to setup the use of
+ ;; smtp.el while on windows only as we have exim taking care of the
+ ;; delivery under linux.
+ ((or (eq whereami 'hcl-nt)
+      (eq whereami 'hcl-linux))
+  
+  ;; A small hack to take care of the whacky behvaiour of gnus-agentize
+;;  (setq gnus-agent-send-mail-function nil)
+
+  (setq send-mail-function 'smtpmail-send-it
+	message-send-mail-function 'smtpmail-send-it
+	smtpmail-debug-info t
+
+	smtpmail-default-smtp-server "codc-mira-1"
+	smtpmail-smtp-server smtpmail-default-smtp-server
+	mail-sources my-all-mail-sources))
+
+ ;; Old configurations:
+
+ ((eq whereami 'prodapt)
+  
+  ;; A small hack to take care of the whacky behvaiour of gnus-agentize
+  (setq gnus-agent-send-mail-function nil)
+
+  (setq send-mail-function 'smtpmail-send-it)
+  (setq message-send-mail-function 'smtpmail-send-it)
+  (setq smtpmail-local-domain "prodapt.com")
+  (setq smtpmail-debug-info t)
+;;  (setq gnus-select-method '(nntp "news-server.austin.rr.com"))
+
+  (setq smtpmail-default-smtp-server "192.168.20.123")
+  (setq smtpmail-smtp-server smtpmail-default-smtp-server)
+  (setq mail-sources my-all-mail-sources))
+
+ ;; My configuration in Ramesh annayya's house in Austin.  When I was
+ ;; there, I was using SMTP to roadrunner's SMTP server from inside gnus
+ ;; itself.  I am not sure if smtp.el is capable of going direct MX...
+ ;; But anyways, this was the setup I used with a gnus-only setup
+ ;; (i.e. no external MTA like exim/sendmail.)  This setup will be useful
+ ;; with NTEmacs, for e.g.
+
+ ((eq whereami 'intel-home)
+   ;; Take care of the generic SMTP stuff
+  (setq send-mail-function 'smtpmail-send-it)
+  (setq message-send-mail-function 'smtpmail-send-it)
+  (setq smtpmail-local-domain "intel.com")
+  (setq smtpmail-debug-info t)
+  (setq gnus-select-method '(nntp "news-server.austin.rr.com"))
+
+  (setq smtpmail-default-smtp-server "smtp-server.austin.rr.com")    
+  (setq smtpmail-smtp-server smtpmail-default-smtp-server)
+  (setq mail-sources my-all-mail-sources))
+
+ ;; The configuration I used when in the office at Intel, Austin.
+ ;; This was a little different because of different set of servers.
+ ;; The actual setup was a little different.  I had this piece of code
+ ;; as a separate function.
+
+ ((eq whereami 'intel-office)
+  
+  ;; A small hack to take care of the whacky behvaiour of gnus-agentize
+  (setq gnus-agent-send-mail-function nil)
+
+  (setq send-mail-function 'smtpmail-send-it)
+  (setq message-send-mail-function 'smtpmail-send-it)
+  (setq smtpmail-local-domain "intel.com")
+  (setq smtpmail-debug-info t)
+  (setq gnus-select-method '(nntp "news-server.austin.rr.com"))
+
+  (setq smtpmail-default-smtp-server "fw-out.intel.com")
+  (setq smtpmail-smtp-server smtpmail-default-smtp-server)
+  (setq mail-sources nil))
+ )
+
+;;; Scoring related stuff
+
+;; All the scoring stuff is commented out... in a bid to make the things
+;; faster and keep the names of the files decent.
+
+;; Make sure same score file is used for similar newsgroups.
+;; (setq gnus-home-score-file
+;;       'gnus-hierarchial-home-score-file)
+
+;; ;; Make sure replies to our posts are scored up.
+;; (add-hook 'message-sent-hook 'gnus-score-followup-article)
+;; (add-hook 'message-sent-hook 'gnus-score-followup-thread)
+
+;; ;; Let us turn on adaptive scoring :)
+;; (setq gnus-use-adaptive-scoring nil)
+;; (setq gnus-default-adaptive-score-alist
+;;       '((gnus-unread-mark)
+;; 	(gnus-ticked-mark (from 4) (subject 2))
+;; 	(gnus-dormant-mark (from 5) (subject 3))
+;; 	(gnus-del-mark (from -4) (subject -1))
+;; 	(gnus-read-mark (from 2) (subject 2))
+;; 	(gnus-expirable-mark)
+;; 	(gnus-killed-mark (subject -3))
+;; 	(gnus-kill-file-mark)
+;; 	(gnus-ancient-mark)
+;; 	(gnus-low-score-mark)
+;; 	(gnus-catchup-mark)))
+
+;; ;; Enable "quick killing" of spammers
+;; (defvar my-score-for-spammers -99999
+;;   "The score to be assigned to any spammers.")
+
+;; (global-set-key "\C-cx" 'gnus-scum-expunge)
+
+;; ;; This function should be called from the summary buffer with point on
+;; ;; the article to nuke.  It puts a rule in ~/News/SPAMMERS to lower
+;; ;; scores of author.  It needs an entry in all.SCORE of (files
+;; ;; "~/News/SPAMMERS").  I changed it to only add the from line.
+;; (defun gnus-scum-expunge ()
+;;   "Remove this spammer from existance as much as possible."
+;;   (interactive)
+;;   (message "expuning scum...")
+;;   (let* ((hdr (gnus-summary-article-header))
+;;          (subj (aref hdr 1))
+;;          (auth (aref hdr 2))
+;;          (artid (aref hdr 4))
+;;          (atsign (string-match "@" artid))
+;;          (host (substring artid (+ atsign 1) (- (length artid) 1)))
+;;          (oldscfile gnus-current-score-file))
+;;     (gnus-summary-score-entry "references" (concat artid "$") 'R' -1000 nil)
+;;     (gnus-summary-score-entry "references" artid 'S' -500 nil)
+
+;;     ;; Change to our spammer score file
+;;     (gnus-score-change-score-file "SPAMMERS")
+
+;;     ;; Add our horrible spammer scores
+;;     ;;(gnus-summary-score-entry "Subject" subj 'S' -1000 nil)
+;;     (gnus-summary-score-entry "From" auth 'S' -99999 nil)
+
+;;     ;; (gnus-summary-score-entry "Message-ID" host 'S' -5 nil) ; mild
+;;     ;; Change back to old current score file
+;;     (gnus-score-change-score-file oldscfile)
+;;     (gnus-score-save))
+
+;;   (message "expunging scum...done."))
+
+;; ;; You may find that your scores have a tendency to grow without bounds,
+;; ;; especially if you're using adaptive scoring.  If scores get too big,
+;; ;; they lose all meaning--they simply max out and it's difficult to use
+;; ;; them in any sensible way.
+;; ;; (setq gnus-decay-scores t)
+;; (defun gnus-decay-score (score)
+;;   "Decay SCORE.
+;;      This is done according to `gnus-score-decay-constant'
+;;      and `gnus-score-decay-scale'."
+;;   (floor
+;;    (- score
+;;       (* (if (< score 0) 1 -1)
+;; 	 (min (abs score)
+;; 	      (max gnus-score-decay-constant
+;; 		   (* (abs score)
+;; 		      gnus-score-decay-scale)))))))
+
+;;; Customisation for add-on packages.
+
+;; Some Mailcrypt customizations.  Mailcrypt is a front end for PGP/GnuPG,
+;; which are encryption tools - We just make sure mailcrypt is available.
+;; (when (locate-library "mailcrypt")
+;;   ;; make the functions available
+;;   (autoload 'mc-install-read-mode "mailcrypt" nil t)
+;;   (autoload 'mc-install-write-mode "mailcrypt" nil t)
+;;   ;; add the functions to the hooks.
+;;   (add-hook 'gnus-summary-mode-hook 'mc-install-read-mode)
+;;   (add-hook 'message-mode-hook 'mc-install-write-mode)
+;;   (add-hook 'news-reply-mode-hook 'mc-install-write-mode)
+
+;;   ;; If messages are PGP Signed, automatically verify them
+;;   (add-hook 'gnus-article-hide-pgp-hook
+;; 	    (lambda ()
+;; 	      (save-excursion
+;; 		(set-buffer gnus-original-article-buffer)
+;; 		(mc-verify))))
+;;   )
+
+;; Supercite -- powerful email reply citing add-on: I have not
+;; been able to use it "out of the box"... Commented out for later use.
+
+; (autoload 'sc-cite-original     "supercite" "Supercite 3.1" t)
+; (autoload 'sc-submit-bug-report "supercite" "Supercite 3.1" t)
+; (add-hook 'mail-citation-hook 'sc-cite-original)
+
+;;
+;; swish-e and nnir.el -- God handling all this mail is just crazy...
+;; Let's try to use some indexing technology :)
+;;
+(setq nnir-mail-backend (nth 0 gnus-secondary-select-methods)
+      nnir-search-engine 'swish-e
+      nnir-swish-e-index-file (expand-file-name "~/Mail/swish-e.index"))
+
+;;; Misc. Customisations.
+
+;; The following are useful modifications to the default article saving
+;; behaviour (a) default the saves to mbox format (b) when we are saving
+;; multiple articles via the # thingy, ensure we just have to enter the
+;; destination file name only once.  The default 'always is a friggin
+;; pita.
+(setq gnus-default-article-saver 'gnus-summary-save-in-mail
+      gnus-prompt-before-saving  't)
+
+;; The following setting will filter out some useless drivel from
+;; subject lines of code review requests that the new crrq tool insists
+;; on adding...
+(setq gnus-list-identifiers
+      '("\\(CRR: \\)?.*\\(new\\|edit\\|comment\\|close\\)\\(]\\|)\\)"
+	"\\(CRR: \\)?(\\(new\\|edit\\|comment\\|close\\))"))
+
+;; The following are useful modifications to the default article saving
+;; behaviour (a) default the saves to mbox format (b) when we are saving
+;; multiple articles via the # thingy, ensure we just have to enter the
+;; destination file name only once.  The default 'always is a friggin
+;; pita.
+(setq gnus-default-article-saver 'gnus-summary-save-in-mail
+      gnus-prompt-before-saving  't)
+
+;; When a screen is split into a number of windows, and we access a
+;; gnus group, the default behaviour is to use up the entire screen by
+;; deleting all other windows.  This is extremely frustrating, so lets
+;; shut off this "feature"
+(setq gnus-use-full-window nil)
+
+;; BBDB is a wonderful package that can be made to automatically take
+;; note of name/email information from incoming mail or newsgroups.
+;; Since newsgroups can be very busy, it is not the default behaviour
+;; for gnus (but not for Rmail), but then, we would like this
+;; behaviour to be turned on for atleast some of the mail groups.  The
+;; following achieves this objective.
+(setq gnus-select-group-hook
+      (lambda ()
+	(setq bbdb/news-auto-create-p
+	      (if (or (string-match "nnml\\+private:HCL-Cisco"
+				    gnus-newsgroup-name)
+		      (string-match "nnml\\+private:Default"
+				    gnus-newsgroup-name)
+		      (string-match "nnml\\+private:GCC"
+				    gnus-newsgroup-name)
+		      (string-match "nnml\\+private:Kernel"
+				    gnus-newsgroup-name)
+		      (string-match "nnml\\+private:To-Me"
+				    gnus-newsgroup-name)
+		      (string-match "nnml\\+private:software-d"
+				    gnus-newsgroup-name)
+		      (string-match "nnml\\+private:emacs-trolls"
+				    gnus-newsgroup-name)
+		      (string-match "nnml\\+private:cisco-linux-users"
+				    gnus-newsgroup-name))
+		  t
+		nil))))
+
+(setq bbdb/gnus-summary-prefer-bbdb-data t
+      bbdb/gnus-summary-prefer-real-names nil)
+
+
+;; Turn on MIME.  You would need gnus v5.8.x for this to work in any
+;; reasonable way.  Depending on how ancient your gnus is, not heeding this
+;; warning could have very strange effects ranging from blanking out of
+;; non-MIME messages to sending all your archived porn to your boss...
+(setq gnus-show-mime t)
+
+;; The following will, eventually, keep the most read newgroups at the top
+;; of the Group buffer ( I think )
+(add-hook 'gnus-summary-exit-hook 'gnus-summary-bubble-group)
+
+(add-hook 'gnus-summary-mode-hook 'turn-on-gnus-mailing-list-mode)
+
+;; We would like to archive the sent mails/news postings.  The following
+;; sets this up in a reasonable way.  Except for the mail select method
+;; (nnbabyl), everything else is the default, but I have put them here just
+;; for clarity. NOTE: I changed the thingy from nnbabyl to nnfolder
+;; sometime :-)
+(setq gnus-message-archive-method
+      '(nnfolder "archive"
+		(nnfolder-directory      "~/Mail/archive")
+		(nnfolder-active-state   "~/Mail/archive/active")
+		(nnfolder-get-new-mail   nil)
+		(nnfolder-inhibit-expiry nil)))
+
+;; We also need to set the gnus groups that these archived files will end
+;; up in.  The variable gnus-message-archive-group is actually a list: you
+;; can set it in very powerful ways.  For now, it suffices for me to
+;; maintain just two groups: one for the Compilers class I am TAing, and
+;; the other for rest of mail/news stuff
+; (setq gnus-message-archive-group
+;       '((".*CS5470" "cs5470")
+; 	("default"   "sent-mail")
+; 	(".*"     "sent-news")))
+(setq gnus-message-archive-group
+           '((if (message-news-p)
+                 "sent-news"
+	       "sent-mail")))
+
+;; Some Misc Article customizations.  Smileys may work only with XEmacs
+;; (for now). NOTE: gnus-treat-strip-pgp and gnus-treat-fill-article do not
+;; interatct very well.  Use only one of them.
+(when (featurep 'xemacs)
+  (setq gnus-treat-display-smileys t))
+
+;; Misc article customizations... affects what processing is done on the
+;; article right before displaying in a Emacs buffer... Note: This is done
+;; _every_ time a thing is displayed.  You might want to reduce the #
+;; functions you call from here if things get a little too slow for
+;; comfort.
+(setq gnus-article-display-hook
+      '(gnus-article-hide-headers-if-wanted 
+        gnus-article-date-lapsed
+;        gnus-article-hide-pgp
+        gnus-article-treat-overstrike
+        gnus-article-de-quoted-unreadable
+        gnus-article-strip-leading-blank-lines
+        gnus-article-remove-trailing-blank-lines
+        gnus-article-strip-multiple-blank-lines
+        gnus-article-highlight
+        gnus-article-emphasize))
+
+;; Prompt for fetching more than 100 messages from a group.
+(setq gnus-large-newsgroup 100)
+
+;; When we forward mails, we would like to maintain the integrity of the
+;; MIME attachments/parts/whatever...  Setting the following variable
+;; accomplishes that.
+(setq message-forward-as-mime t)
+
+;; The number of groups I am subscribed to is growing fast and furious...
+;; gnus-topicc-mode is great to organise them in some logical way.  It is a
+;; actually a big pain that the information about `topics', that I have
+;; customised is all stored away in the .newsrc.eld file.  So, it is going
+;; to be one painful problem moving all this customization to another
+;; machine.
+(add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
+
+;; Some gunks have a habit of sending mails with a thousand addresses in
+;; the To: field...  gnus has a way to fight these retards...
+(setq gnus-treat-hide-boring-headers 'head)
+(setq gnus-boring-article-headers (list 'long-to))
+
+;; A list of the headers we are interested in.  You are right, most of
+;; the things listed here are Gnus defaults.  Only the user-agent and
+;; x-mailer headers are our own additions... However based on past
+;; experience, customizing such variables by (concat) ing to the already
+;; initialized variable is frought with perils because we potentially
+;; eval our .gnus file multiple times...  Maye the world needs a new
+;; macro that acts like concat but only after checking for the presence
+;; of the candidate string first ... Or maybe there already is something
+;; along these lines...  
+(setq gnus-visible-headers
+      (concat "^From:\\|^Newsgroups:\\|^Subject:\\|^Date:\\|"
+	      "^Followup-To:\\|^Reply-To:\\|^Organization:\\|"
+	      "^Summary:\\|^Keywords:\\|^To:\\|^[BGF]?Cc:\\|"
+	      "^Posted-To:\\|^Mail-Copies-To:\\|^Mail-Followup-To:\\|"
+	      "^Apparently-To:\\|^Gnus-Warning:\\|^Resent-From:\\|"
+	      "^X-Sent:\\|^X-Mailer\\|^User-Agent\\|^X-Interest-Karra"))
+
+;; When replying to messages we would like certain headers to be
+;; included in the quoted text.  for.e.g the date of the original
+;; message and stuff.  As of this writing, there is no direct way in
+;; which we can specify just these headers.  Instead we need to set the
+;; following variable to a list headers that we want to be _removed_.
+;; *sigh*.
+(setq message-ignored-cited-headers
+      (concat 
+       "^X\\|^R\\|^O\\|^L\\|^I\\|^M\\|^U\\|^Content"))
+
+;; In many cases, it is not fun to look at our name in the summary buffer -
+;; For e.g. in the archive groups, all articles are written by us - the
+;; following might help
+(setq gnus-extra-headers '(To Newsgroups)
+      nnmail-extra-headers '(To Newsgroups)
+      gnus-summary-line-format "%U%R%z%I%(%[%4L: %-20,20f%]%) %s\n")
+
+;; If the From header has any of these values, the "To" address is
+;; displayed in the Summary buffer.  This is useful when we are looking
+;; at mails _we_ have sent out, like in archive groups and stuff.
+(setq gnus-ignored-from-addresses 
+      (concat "\\(\\(sriram\\)?karra@\\("
+	      "\\(\\([^\\.]+\\.\\)?\\(cs\\|eng\\)\\.utah\\.edu\\)"
+	      "\\|intel\\.com"
+	      "\\|yahoo\\.com"
+	      "\\|hotmail\\.com"
+	      "\\)\\|ksriram@prodapt\\.com\\)"))
+(setq gnus-ignored-from-addresses
+      (concat "\\(" gnus-ignored-from-addresses
+	      "\\)\\|\\(karra@shakti\\.homelinux\\.net\\)"
+	      "\\|\\(skarra@cisco\\.com\\)"))
+
+;; Disable CC: to self in wide replies and stuff
+(setq message-dont-reply-to-names gnus-ignored-from-addresses)
+
+;; It appears there is a bug in the way gnus handles pdf attachments.  Here
+;; is a fix
+;; From: Peter Rye <prye@shiraz.apana.org.au>
+;; Newsgroups: gnu.emacs.gnus
+;; Force base64 encoding of unknown mime types
+(setq mm-content-transfer-encoding-defaults
+      '(("text/x-patch" 8bit) 
+        ("text/.*" qp-or-base64) 
+        ("message/rfc822" 8bit) 
+        ("application/emacs-lisp" 8bit) 
+        ("application/x-patch" 8bit) 
+        ("application/pdf" base64)
+        (".*" base64)))
+
+;; One interesting guy (on ilugc) inserts the => in front of cited text in
+;; mails.  Such text will not be highlighted unless we do the following:
+(if (boundp 'message-cite-prefix-regexp)
+    (setq message-cite-prefix-regexp
+	  (concat message-cite-prefix-regexp 
+		  "\\|=>\\//"))
+  (setq message-cite-prefix-regexp "\\|=>\\|//"))
+
+;; By default when more than one splitting rule is matched for an article
+;; (mail), it is cross-posted in all the relevant groups.  What this means
+;; is the article will appear in listings of both groups.  Although any
+;; marking in one group will appear in the other one as well, it is still a
+;; pain for a number of reasons : it clutters summary buffer space when
+;; listing all articles.
+(setq nnmail-crosspost nil)
+
+;; Many times we get tons of duplciate mails, either because guys reply
+;; both to mailing lists and to us, or just because there is some bug
+;; somewhere in the mailng list software (ilugc?).  The following will
+;; completely delete the duplicate mails.
+(setq nnmail-treat-duplicates 'delete)
+;;(setq nnmail-treat-duplicates 'warn)
+
+;; We don't want courtesy copies of replies to our newgroups postings...
+(defun  my-message-header-setup-hook ()
+  (let ((group (or gnus-newsgroup-name "")))
+    (when (or (message-fetch-field "newsgroups")
+              (gnus-group-find-parameter group 'to-address)
+              (gnus-group-find-parameter group 'to-list))
+      (insert "Mail-Copies-To: nobody\n"))
+    (message group)))
+(add-hook 'message-header-setup-hook 
+          'my-message-header-setup-hook)
+
+;; The default *Group* buffer mode line contains the name of the news
+;; server.  This can get a little big, messy and obscure some important
+;; info to the right end of the modeline.  The default is:
+;; "Gnus: %%b {%M%:%S}"
+(setq gnus-group-mode-line-format "Gnus: %%b {%M}")
+
+;; For some reason Tons of "new" nnfolder+private groups are popping out of
+;; thin air...  For every nnml+private group present, a "new" nnfolder
+;; group is being created, and it is automatically subscribed to when gnus
+;; is started properly (not in gnus-no-server or gnus-unplugged types).  I
+;; don't know why this happens, but this is a temporary fix.  I just
+;; removed ^nnfolder from the default string.
+(setq gnus-auto-subscribed-groups "^nnml\\|^nnbabyl\\|^nnmh\\|^nnmbox")
+
+
+;; Some people (Rajiv) send application/pgp type stuff... which for some
+;; reason, upsets Gnus... which upsets me... Let us try to do something
+;; about this... 
+(when (boundp 'mm-decrypt-function-alist)
+  (add-to-list 'mm-decrypt-function-alist
+	       '("application/pgp" mml2015-decrypt "PGP"
+		 mml2015-decrypt-test)))
+
+;; There are many ways to deal with html mails.  Most half-decent mail
+;; programs these days send multi-part mails.  i.e. the same stuff is
+;; formatted as text as well as html and sent as attachments of
+;; different mime types - text/plain and text/html.  The following
+;; setting makes sure that if we get a multipart/alternate mail, we
+;; would not like to look at the following mime types.
+(setq mm-discouraged-alternatives '("text/html" "text/richtext"))
+
+;; Some morons do indeed send just plain html mail.  gnus will try to do
+;; something decent with it.
+;;
+;; On certain systems, lynx does not take the -stdin flag... Fix it.
+;; Lynx is used automatically when Gnus cannot find other renderers.
+(require 'mm-view)
+(setcdr (assq 'lynx mm-text-html-washer-alist)
+	'(mm-inline-wash-with-file nil "lynx" "-dump" "-force_html" file))
+
+;; Some cool softwares, like SuperCite, can use this header when
+;; referring to us... What the heck :)
+(setq message-default-headers "X-Attribution: karra")
+
+;; Refer to ~/.customs.emacs for doc about switch-mode-line-formats
+(setq gnus-started-hook
+      (lambda ()
+	(when (fboundp 'switch-mode-line-formats)
+	  (switch-mode-line-formats)
+	  (switch-mode-line-formats))))
+
+;; On the HCL work machine, I have a W2K/Woody dual boot with a FAT32
+;; partition shared between the two OSes.  FAT32 does not allow ":" in
+;; filenames.  Some of the directory names used by the Gnus cache have a
+;; : in it and hence cannot be created on the FAT32 part.  This default
+;; behaviour can be overcome by setting the following variable.
+;; Thu Aug  7 13:20:20 2003: I had a hard disk crash in Dec 2002, and
+;; have moved all mail to `desh' (Solaris).  Don't want to mess with
+;; this stuff, in any case.
+(when (or (eq whereami 'hcl-nt)
+	  (eq whereami 'hcl-linux))
+  (setq nnheader-file-name-translation-alist '((?: . ?_))))
+
+;; Setup colors if we have something to setup.
+
+(if (fboundp 'customize-gnus-colors)
+    (customize-gnus-colors))
+
+;;; No customizations beyond this point
+
+;; This will make Gnus an offline reader.  (We can "send" mail and news
+;; articles and they will be put in a special "queue" group.  We can send
+;; them all at once when we connect to the net once again.
+;;(setq gnus-agent-send-mail-function message-send-mail-function)
+(gnus-agentize)

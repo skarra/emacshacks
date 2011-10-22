@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Lists and The ``Cons Cell'' Type</TITLE>
+<META NAME="description" CONTENT="Lists and The ``Cons Cell'' Type">
+<META NAME="keywords" CONTENT="tutorial">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="tutorial.css">
+<LINK REL="next" HREF="node20.html">
+<LINK REL="previous" HREF="node18.html">
+<LINK REL="up" HREF="node18.html">
+<LINK REL="next" HREF="node20.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html227"
+ HREF="node20.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html225"
+ HREF="node18.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html219"
+ HREF="node18.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html228"
+ HREF="node20.html">Run Time Type Identification</A>
+<B> Up:</B> <A NAME="tex2html226"
+ HREF="node18.html">Lisp Objects and Data</A>
+<B> Previous:</B> <A NAME="tex2html220"
+ HREF="node18.html">Lisp Objects and Data</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H2><A NAME="SECTION00091000000000000000">
+Lists and The ``Cons Cell'' Type</A>
+</H2>
+
+<P>
+Of all the types mentioned above, the one type we have not spent much time on
+already, yet demands attention is the ``cons cell''.
+
+<P>
+Lisp stands for <I>List Processing</I>, yet we have remained strangely silent
+on the topic of Lists.  I am sure this is some kind of a record for
+introductory texts on Lisp - to talk about lists so late. 
+
+<P>
+But before we look at lists, we need to look at <I>Cons cells</I> first.  A
+cons cell is a data object that represents an ordered pair.  That is, it has
+two slots, and each slot ``holds'' some lisp object.  The first slot is called
+the <I>CAR</I> of the cons cell, while the other is called the <I>CDR</I>
+(pronounced 'could-er') slot.  The car and cdr slots can hold objects of
+different types.  A cons cell can be constructed using the <TT>cons</TT>
+built-in function, as the following illustrates:
+
+<P>
+<PRE>
+(setq a (cons 1 2))
+(setq b (cons 10 "abcd"))
+</PRE>
+<P>
+Two built-in functions <TT>car</TT> and <TT>cdr</TT> are available to access
+the car and cdr cells respectively.
+
+<P>
+A ``list'' represents a sequence of zero or more elements.  Lists, however, are
+not a primitive data type; they are built up from <I>cons cells</I>.  It does
+not matter how exactly it is implemented internally; but it helps to visualise
+a list as a cons cell whose cdr is either nil or another list.  So, the
+following is a legit. way of creating a list:
+
+<P>
+<PRE>
+(setq lis (cons 1 (cons 2 nil)))
+</PRE>
+<P>
+This can get cumbersome when building large lists so there are short cuts,
+ofcourse, like:
+
+<P>
+<PRE>
+(setq lis (list 1 2))
+</PRE>
+<P>
+The two methods yield the same results, but the first one illustrates exactly
+how the list is built up, while the second one hides that detail in favour of
+brevity.
+
+<P>
+You must note that the written representation of a list in a Lisp program is as
+a sequence of symbols enclosed in brackets.  You must also note that this is
+the precise syntax of a Lisp expression itself!! In otherwords, your Lisp
+program is itself written as a series of Lists.  This is a really interesting
+property, and you should spend some time reflecting on this.  Internalising
+this concept would help you a little in understanding the realy profundity
+behing the cliche <I>``In Lisp code is data''</I>.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html227"
+ HREF="node20.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html225"
+ HREF="node18.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html219"
+ HREF="node18.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html228"
+ HREF="node20.html">Run Time Type Identification</A>
+<B> Up:</B> <A NAME="tex2html226"
+ HREF="node18.html">Lisp Objects and Data</A>
+<B> Previous:</B> <A NAME="tex2html220"
+ HREF="node18.html">Lisp Objects and Data</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Sriram Karra</I>
+<BR><I>2005-01-06</I>
+</ADDRESS>
+</BODY>
+</HTML>

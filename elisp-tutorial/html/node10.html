@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<!--Converted with LaTeX2HTML 98.1p1 release (March 2nd, 1998)
+originally by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>Special Forms</TITLE>
+<META NAME="description" CONTENT="Special Forms">
+<META NAME="keywords" CONTENT="tutorial">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<LINK REL="STYLESHEET" HREF="tutorial.css">
+<LINK REL="next" HREF="node11.html">
+<LINK REL="previous" HREF="node5.html">
+<LINK REL="up" HREF="tutorial.html">
+<LINK REL="next" HREF="node11.html">
+</HEAD>
+<BODY >
+<!--Navigation Panel-->
+<A NAME="tex2html132"
+ HREF="node11.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html130"
+ HREF="tutorial.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html124"
+ HREF="node9.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html133"
+ HREF="node11.html">Primitive and Built-in Functions</A>
+<B> Up:</B> <A NAME="tex2html131"
+ HREF="tutorial.html">Emacs Lisp, The Language</A>
+<B> Previous:</B> <A NAME="tex2html125"
+ HREF="node9.html">Misc stuff about functions</A>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<H1><A NAME="SECTION00060000000000000000">
+Special Forms</A>
+</H1>
+
+<P>
+In lisp terminology, a ``form'' is the same as an ``expression''.  We saw above
+that for <TT>defun</TT> to behave ``correctly'', its arguments should not be
+evaluated.  In effect, we are asking for a semantics that is slightly different
+from the typical run-of-the-mill function call.  An expression which has this
+special semantics is called a ``special form''.  Thus, a special form is, by
+definition, a function specially marked such that not all of its arguments are
+evaluated.  Most special forms define control structures or perform variable
+bindings - things that functions cannot do.  <TT>defun</TT> is the only
+special form that we have encountered thus far.  The total number of available
+special forms is quite small, but we shall not look into all of them, rather,
+in order to give you some more feel about the need for special forms, we shall
+look a couple more.
+
+<P>
+In most modern languages the boolean operators <TT>or</TT> and <TT>and</TT>
+(``||'' and ``&amp;&amp;'' in C, C++ and Java) have a property known as
+``short-circuiting''.  This short circuiting property enables us to safely
+write code that looks like this:
+
+<P>
+<PRE>
+if (p &amp;&amp; p-&gt;data == 0) {
+  // ...
+}
+</PRE>
+<P>
+In the above code snippet, the second expression <TT>p-&gt;data == 0)</TT> is
+evaluated only if necessary.  The <TT>and</TT> function in lisp also has this
+short-circuiting property, and the lisp version looks something like this:
+
+<P>
+<PRE>
+(and (not (null p))
+     (= data 0))
+</PRE>
+<P>
+In order to effect this short-circuiting property, we cannot allow the normal
+evaluation semantics of a typical function call as that will evaluate both the
+sub expressions.  For this reason <TT>or</TT> is implemented as a special form
+in Elisp.  The advanced reader might be interested to know that in Common Lisp,
+many of the constructs that are special forms in Elisp special forms are
+actually implemented as macros.
+
+<P>
+Early on, when talking about types of expressions, we mentioned that the
+variable assignment expression <TT>(setq foo 10)</TT> is special, but did not
+elaborate.  With your new found enlightenment, you should have no trouble
+seeing that <TT>setq</TT> is a special form.  For, if it were a regular
+function, the first argument <TT>foo</TT> would be evaluated, and we would not
+quite be able to <B>assign</B> a new value to it.
+
+<P>
+The Emacs Lisp Manual lists the complete list of available special forms in
+Elisp.
+
+<P>
+<HR>
+<!--Navigation Panel-->
+<A NAME="tex2html132"
+ HREF="node11.html">
+<IMG WIDTH="37" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next" SRC="next_motif.gif"></A> 
+<A NAME="tex2html130"
+ HREF="tutorial.html">
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_motif.gif"></A> 
+<A NAME="tex2html124"
+ HREF="node9.html">
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="previous_motif.gif"></A>   
+<BR>
+<B> Next:</B> <A NAME="tex2html133"
+ HREF="node11.html">Primitive and Built-in Functions</A>
+<B> Up:</B> <A NAME="tex2html131"
+ HREF="tutorial.html">Emacs Lisp, The Language</A>
+<B> Previous:</B> <A NAME="tex2html125"
+ HREF="node9.html">Misc stuff about functions</A>
+<!--End of Navigation Panel-->
+<ADDRESS>
+<I>Sriram Karra</I>
+<BR><I>2005-01-06</I>
+</ADDRESS>
+</BODY>
+</HTML>
