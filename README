@@ -1,7 +1,7 @@
 -*- Outline -*-
 
 Created		: Sat Oct 22 21:16:02 IST 2011
-Last Modified	: Sun Oct 23 08:04:02 IST 2011
+Last Modified	: Sun Oct 23 08:49:02 IST 2011
 
 This repository / directory contains a list of my emacs lisp hacks, including
 my emacs startup scripts. Except for the Emacs startup files the others have
@@ -19,12 +19,9 @@ a point to go through the comments in the files.
 
 * .emacs, .customs.emacs, .gnus
 
-  These three files along with a fourth called .gnus.private that for
-  predictable reasons is not in this repository, form my Emacs startup script
-  bunch. 
-
-  .emacs can be done away with completely, and you can save .customs.emacs as
-  your  .emacs to get started.
+  These three files along with a fourth called .gnus.private that, for
+  predictable reasons, is not in this repository contain my base emacs
+  customizations.
 
 * sample.emacs
 
