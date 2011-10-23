@@ -1,2 +1,100 @@
-This directory contains small emacs lisp files that I have written
-myself... 
+-*- Outline -*-
+
+Created		: Sat Oct 22 21:16:02 IST 2011
+Last Modified	: Sun Oct 23 08:04:02 IST 2011
+
+This repository / directory contains a list of my emacs lisp hacks, including
+my emacs startup scripts. Except for the Emacs startup files the others have
+not been touched for a while (for about 6-10 years). You've been warned. This
+is just an attempt to bring them out into the exciting new world of social
+coding on github. It's my habit to extensively comment my code, so do make it
+a point to go through the comments in the files.
+
+* elisp-tutorial
+
+  I gave a few talks at my local LUG (at that time) - the ILUGC (Indian Linux
+  Users Group, Chennai) on elisp programming. This is some material from that
+  talk. I did not use any slides, so I wrote it all up as a small tutorial /
+  document.
+
+* .emacs, .customs.emacs, .gnus
+
+  These three files along with a fourth called .gnus.private that for
+  predictable reasons is not in this repository, form my Emacs startup script
+  bunch. 
+
+  .emacs can be done away with completely, and you can save .customs.emacs as
+  your  .emacs to get started.
+
+* sample.emacs
+
+  This is the file I used to circulate to my friends and others who wanted a
+  taste of my .emacs. Ofcourse my entire actual setup is available, but it
+  could be too long and complex for some.
+
+* OpenGL.el
+  
+  Back in grad school at the School of Computing, University of Utah, I
+  dabbled with OpenGL. That was also the period of I was most prolific with my
+  emacs lisp hacking as well. I took on the maintenance of the OpenGL mode for
+  Emacs for a brief period. Now I cannot even remember if I passed on the
+  'maintership' to anyone else... But I can tell you that I have not used it
+  in a while myself.
+
+* anniv.el
+
+  For a long time The Emacs BBDB was my sole rolodex. I wrote up this short
+  script to make birthday and anniversary entries in the Emacs diary (so I
+  will be reminded about them.
+
+* set-major-mode.el
+
+  Many times, when a new file is opened, the correct editing mode cannot be
+  selected.  Examples of this are text files that need Outline mode, shell
+  scripts that do not have the .sh suffix, perl scripts that do not have the
+  .pl suffix etc.  In these cases, the first line that is typed, typically is
+  something that specifies the right mode (soemthing like #!/bin/bash or -*-
+  Outline -*- or whatever).  So, by the time the user types RET for the first
+  time in an originally empty buffer, we have enough info to set the right
+  mode.  This saves one from typing in the right command to switch the mode
+  manually (even if it is something as simple as M-x normal-mode RET :)
+
+* frio-asm.el
+
+  Frio DSP was a Intel-ADI joint effort at the time Intel first entered into
+  the DSP space. I worked on a binary rewriter tool as an intern with Intel in
+  the summer of 2001 and there was a lot of assembly programming (or at least
+  reading) involved. This was my attempt to have a major mode for editing frio
+  assembly files.
+
+* lost.el
+
+  At the ILUGC (Indian Linux Users Group, Chennai) there was a short live
+  project called LOST - Linux One Stanza Tip. Volunteers wrote up small tips
+  and formatted them in a very specfic way so they could be attached to the
+  bottom of outgoing emails. This was my attempt to enable easy attachment of
+  LOST snippets to emacs-based mail clients.
+
+* random-man.el
+
+  Use this to fetch and display a random man page inside Emacs. I have learnt
+  a lot of Unix starting with this command :) This has been tested most
+  recently (i.e. on Oct 23, 2011 08:00 IST) on Aquamacs 2.3a running on Mac OS
+  X Lion (based on GNU Emacs 23.3)
+
+* random-man-de-sugar.el
+
+  Just the meat of random-man.el. Through the mists of time I am not able to
+  recall why I needed a lean version of the file.
+
+* rmail-block-sender.el
+
+  Before I got onto the Gnus bandwagon, I actually used Rmail. Say what you
+  want to about Rmail, but the most awesome thing about Rmail is it has one
+  power user unlike any other - RMS himself. So I was confident it will
+  continue to be maintained... 
+
+  At any rate, this particular extension gives the ability to generate some
+  procmail recipes to block senders from inside Rmail.
+
+* wip - this is a directory of misc. work-in-progres snippets.
