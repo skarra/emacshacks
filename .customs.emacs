@@ -2,7 +2,7 @@
 ;;
 ;; $Id: .customs.emacs,v 1.13 2004/11/05 09:10:59 karra Exp $
 ;;
-;; Last Modified	: Wed Oct 12 12:44:07 IST 2011 16:25:57 IST
+;; Last Modified	: Mon Dec 05 14:06:20 IST 2011 16:25:57 IST
 ;;
 ;; Emacs customisation file - called  from ~/.emacs.  You should be able
 ;; to  copy this entire  file over  into your  ~/.emacs and  life should
@@ -1696,6 +1696,7 @@ menu, add it to the menu bar."
 	ps-lpr-switches  my-lpr-switches
 	lpr-switches     my-lpr-switches
 	ps-printer-name  my-printer-name
+	pr-file-duplex   t
 	ps-spool-duplex  t
 	ps-paper-type    (if (or (eq whereami 'hcl-nt)
 				 (eq whereami 'hcl-linux)
