@@ -2,7 +2,7 @@
 ;;
 ;; $Id: .customs.emacs,v 1.13 2004/11/05 09:10:59 karra Exp $
 ;;
-;; Last Modified	: Mon Dec 05 14:06:20 IST 2011 16:25:57 IST
+;; Last Modified	: Mon Feb 13 16:52:24 IST 2012 16:25:57 IST
 ;;
 ;; Emacs customisation file - called  from ~/.emacs.  You should be able
 ;; to  copy this entire  file over  into your  ~/.emacs and  life should
@@ -276,6 +276,7 @@ and any subdirectory that contains a file named `.nosearch'."
 ;; bad.
 (add-file-list-to-list 'load-path
 		       '("~/elisp"
+			 "~/elisp/lisp/"
  			 "~/elisp/games"
 			 "~/elisp/bbdb/lisp/"
 			 "~/elisp/eieio/"
@@ -493,6 +494,13 @@ run before and after the library is loaded (if available)."
 ; (setq font-lock-support-mode 'lazy-lock-mode)
 
 (load-library-carefully 'cc-cmds)
+
+(load-library-carefully 'org-mode
+			nil
+			(lambda ()
+			  (add-to-list 'auto-mode-alist
+				       '("\\.org\\'" . org-mode)))
+			nil)
 
 ;; When we are using the sawmill window manager, let's load the sawmill
 ;; mode.  The idea is the call-process will return a non-zero value if a
