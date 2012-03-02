@@ -2,7 +2,7 @@
 ;;
 ;; $Id: .customs.emacs,v 1.13 2004/11/05 09:10:59 karra Exp $
 ;;
-;; Last Modified	: Mon Feb 13 16:52:24 IST 2012 16:25:57 IST
+;; Last Modified	: Thu Mar 01 13:56:46 IST 2012 16:25:57 IST
 ;;
 ;; Emacs customisation file - called  from ~/.emacs.  You should be able
 ;; to  copy this entire  file over  into your  ~/.emacs and  life should
@@ -298,7 +298,8 @@ and any subdirectory that contains a file named `.nosearch'."
  			 "~/elisp/Large1s/mailcrypt/"
  			 "~/elisp/Large1s/ps-print/lisp"
 			 "~/elisp/Large1s/w3m_el/lisp/"
-			 "~/elisp/Large1s/supercite/")
+			 "~/elisp/Large1s/supercite/"
+			 )
  			t)
 
 ;; PCL-CVS is part of Emacs21.  Once we are really satisfied with
@@ -495,7 +496,7 @@ run before and after the library is loaded (if available)."
 
 (load-library-carefully 'cc-cmds)
 
-(load-library-carefully 'org-mode
+(load-library-carefully 'org
 			nil
 			(lambda ()
 			  (add-to-list 'auto-mode-alist
@@ -620,12 +621,14 @@ installed.  so I had to paste the following code from the cade side. "
 ;; time.  gnus is not relevant when I use Emacs on San Jose cisco
 ;; servers, for e.g.
 ;;
-;; (require 'gnus-msg)
-;; (when (file-exists-p (expand-file-name "~/.gnus"))
-;;   (condition-case err
-;;       (load-file "~/.gnus")
-;;     (my-errors nil)))
-;; (setq mail-user-agent 'gnus-user-agent)
+;; Mon Feb 13 17:14:04 2012 - brought back to life at Cleartrip, just for
+;; kicks...
+(require 'gnus-msg)
+(when (file-exists-p (expand-file-name "~/.gnus"))
+  (condition-case err
+      (load-file "~/.gnus")
+    (my-errors nil)))
+(setq mail-user-agent 'gnus-user-agent)
 
 ;; (add-hook 'mail-setup-hook 'mail-abbrevs-setup)
 (add-hook 'mail-mode-hook 'mail-abbrevs-setup)
@@ -1246,20 +1249,20 @@ This theme has black background and pleasant foreground colors."
     (yellow ((t (:foreground "yellow"))))
     (zmacs-region ((t (:background "gray65")))))))
 
-(load-library-carefully
- "color-theme"
- nil
- (lambda ()
-   (add-to-list
-    'color-themes
-    '(color-theme-karra
-      "Karra"
-      "Sriram Karra <karra@cs.utah.edu>"))
-   (color-theme-karra))
- (lambda ()
-   (message
-    "color-theme.el(c) not found in your load-path.  Setting up old way.")
-   (setup-colors-old-way)))
+;; (load-library-carefully
+;;  "color-theme"
+;;  nil
+;;  (lambda ()
+;;    (add-to-list
+;;     'color-themes
+;;     '(color-theme-karra
+;;       "Karra"
+;;       "Sriram Karra <karra@shakti.homelinux.net>"))
+;;    (color-theme-karra))
+;;  (lambda ()
+;;    (message
+;;     "color-theme.el(c) not found in your load-path.  Setting up old way.")
+;;    (setup-colors-old-way)))
 
 (load-library-carefully "boxquote"
 			nil
@@ -1289,6 +1292,10 @@ This theme has black background and pleasant foreground colors."
   (setq user-mail-address "sriram.karra@intel.com"
 	message-user-organization "Intel Corp."))
  
+ ((eq whereami 'cleartrip)
+  (setq user-mail-address "sriram.karra@cleartrip.com"
+	message-user-organization "Cleartrip Travel Services Pvt Ltd"))
+
  (t
   (setq user-mail-address "karra@shakti.homelinux.net"
 	message-user-organization "The Klingon High Council")))
