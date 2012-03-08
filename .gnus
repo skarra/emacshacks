@@ -195,6 +195,58 @@ the local mail spool.  ")))
 	  (switch-mode-line-formats)
 	  (switch-mode-line-formats))))
 
+;; We use NotMuchMail for indexing. At Cleartrip it is already nicely set
+;; up. Although notmuch comes with its own emacs integration, making the stuff
+;; work with Gnus will elevate its usefulness. If notmuch is not already
+;; installed the following configuration will cause problems at load time -
+;; which is against the overall design principles guiding my emacs
+;; customization files :-) Will fix it at a later time.
+
+(GNUEmacs23
+ (require 'notmuch)
+ (require 'org-gnus)
+
+ (defun lld-notmuch-shortcut ()
+   (define-key gnus-group-mode-map "GG" 'notmuch-search))
+
+ (defun lld-notmuch-file-to-group (file)
+   "Calculate the Gnus group name from the given file name."
+   (let ((group (file-name-directory (directory-file-name
+				      (file-name-directory file)))))
+     (setq group (replace-regexp-in-string ".*/Maildir/"
+					   "nnimap+local:" group))
+     (setq group (replace-regexp-in-string "/$" "" group))
+     (if (string-match ":$" group)
+	 (concat group "INBOX")
+       (replace-regexp-in-string ":\\." ":" group))))
+
+ (defun lld-notmuch-goto-message-in-gnus ()
+   "Open a summary buffer containing the current notmuch article."
+   (interactive)
+   (let ((group (lld-notmuch-file-to-group (notmuch-show-get-filename)))
+	 (message-id (replace-regexp-in-string
+		      "^id:" ""
+		      (notmuch-show-get-message-id))))
+     (setq message-id (replace-regexp-in-string "\"" "" message-id))
+     (if (and group message-id)
+	 (progn
+	   (switch-to-buffer "*Group*")
+	   (org-gnus-follow-link group
+				 message-id))
+       (message "Couldn't get relevant infos for switching
+    to Gnus."))))
+
+ (add-hook 'gnus-group-mode-hook 'lld-notmuch-shortcut)
+
+ ;; I guess it is desirable to have notmuch automatically index the outgoing
+ ;; mails, but I am not ready to give up control over to this guy yet. I am
+ ;; happy storing my sent mail on a IMAP folder and it getting indexed at the
+ ;; time offlineimap runs
+ (setq notmuch-fcc-dirs nil)
+
+ (define-key notmuch-show-mode-map (kbd "C-c C-c")
+   'lld-notmuch-goto-message-in-gnus))
+
 (if (fboundp 'customize-gnus-colors)
     (customize-gnus-colors))
 
