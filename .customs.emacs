@@ -2,7 +2,7 @@
 ;;
 ;; $Id: .customs.emacs,v 1.13 2004/11/05 09:10:59 karra Exp $
 ;;
-;; Last Modified	: Thu Mar 01 13:56:46 IST 2012 16:25:57 IST
+;; Last Modified	: Tue Mar 06 15:43:03 IST 2012 16:25:57 IST
 ;;
 ;; Emacs customisation file - called  from ~/.emacs.  You should be able
 ;; to  copy this entire  file over  into your  ~/.emacs and  life should
@@ -102,6 +102,9 @@
 
 (defmacro GNUEmacs21 (&rest x)
   (list 'if '(string-match "^GNU Emacs 21" (version)) (cons 'progn x)))
+
+(defmacro GNUEmacs23 (&rest x)
+  (list 'if '(string-match "^GNU Emacs 23" (version)) (cons 'progn x)))
 
 (defmacro GNUEmacs-old (&rest x)
   (list 'if '(and (string-match "^GNU Emacs" (version))
@@ -274,9 +277,13 @@ and any subdirectory that contains a file named `.nosearch'."
 ;; similar source tree for the elisp packages across accounts.  Moreover
 ;; having non-existant paths in the  load-path does not affect thing too
 ;; bad.
+(setq ver-specific-lispdir (concat "~/elisp/lisp/"
+				   (number-to-string emacs-major-version) "."
+				   (number-to-string emacs-minor-version) "/"))
 (add-file-list-to-list 'load-path
-		       '("~/elisp"
+		       `("~/elisp"
 			 "~/elisp/lisp/"
+			 ,ver-specific-lispdir
  			 "~/elisp/games"
 			 "~/elisp/bbdb/lisp/"
 			 "~/elisp/eieio/"
