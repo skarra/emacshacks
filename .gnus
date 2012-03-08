@@ -175,6 +175,16 @@ the local mail spool.  ")))
 ;; Disable CC: to self in wide replies and stuff
 (setq message-dont-reply-to-names gnus-ignored-from-addresses)
 
+(setq gnus-parameters
+      '(("^nnimap\\+Cleartrip:Cleartrip\\.Jira"
+	 (sieve header :contains "subject" "[Jira].*"))))
+
+;; Set up Gnus Sieve Support
+(setq gnus-sieve-file "~/.gnus.siv")
+(autoload 'sieve-mode "sieve-mode")
+(setq auto-mode-alist (cons '("\\.siv\\'" . sieve-mode) auto-mode-alist))
+(require 'gnus-sieve)
+
 ;; Mark all the sent messages as read
 (setq gnus-gcc-mark-as-read t)
 
