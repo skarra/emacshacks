@@ -1,7 +1,7 @@
 ;;; -*-emacs-lisp-*- Gnus startup file.
 
 ;; Created       : Febraury 2, 2001
-;; Last Modified : Fri Mar 02 16:09:07 IST 2012
+;; Last Modified : Thu Mar 08 13:15:26 IST 2012
 ;;
 ;; Copyright (C) 2001 - 2012, Sriram Karra <karra.etc@gmail.com>
 ;; Feel free to do as you please with this code
@@ -59,7 +59,7 @@ the local mail spool.  ")))
 
   (setq gnus-message-archive-method '(nnimap "Cleartrip"))
   (setq gnus-update-message-archive-method t)
-  (setq gnus-message-archive-group "Sent Messages")
+  (setq gnus-message-archive-group "Cleartrip.Sent Messages")
   )
  )
 
