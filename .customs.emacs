@@ -2,7 +2,7 @@
 ;;
 ;; $Id: .customs.emacs,v 1.13 2004/11/05 09:10:59 karra Exp $
 ;;
-;; Last Modified	: Tue Mar 06 15:43:03 IST 2012 16:25:57 IST
+;; Last Modified	: Tue Jun 26 06:55:47 IST 2012 16:25:57 IST
 ;;
 ;; Emacs customisation file - called  from ~/.emacs.  You should be able
 ;; to  copy this entire  file over  into your  ~/.emacs and  life should
@@ -285,27 +285,27 @@ and any subdirectory that contains a file named `.nosearch'."
 			 "~/elisp/lisp/"
 			 ,ver-specific-lispdir
  			 "~/elisp/games"
-			 "~/elisp/bbdb/lisp/"
-			 "~/elisp/eieio/"
-			 "~/elisp/semantic/"
-			 "~/elisp/jde/lisp/"
- 			 "~/elisp/gnus/lisp"
-			 "~/elisp/tramp/lisp"
-			 "~/elisp/w3m_el/lisp"
+;;			 "~/elisp/eieio/"
+;;			 "~/elisp/semantic/"
+;;			 "~/elisp/jde/lisp/"
+;; 			 "~/elisp/gnus/lisp"
+;;			 "~/elisp/tramp/lisp"
+;;			 "~/elisp/w3m_el/lisp"
 			 "~/elisp/Small1s"
-			 "~/elisp/Large1s/auctex"
+;;			 "~/elisp/Large1s/auctex"
  			 "~/elisp/Large1s/bbdb/lisp"
  			 "~/elisp/Large1s/bbdb/bits"
 			 "~/elisp/Large1s/bbdb/bits/bbdb-filters"
- 			 "~/elisp/Large1s/dismal-1.4/"
- 			 "~/elisp/Large1s/elib"
+;; 			 "~/elisp/Large1s/dismal-1.4/"
+;; 			 "~/elisp/Large1s/elib"
  			 "~/elisp/Large1s/gnus/lisp"
+ 			 "~/elisp/Large1s/python-mode"
 ;;			 "~/elisp/Large1s/gnus/contrib/"
- 			 "~/elisp/Large1s/gnuserv"
- 			 "~/elisp/Large1s/mailcrypt/"
- 			 "~/elisp/Large1s/ps-print/lisp"
-			 "~/elisp/Large1s/w3m_el/lisp/"
-			 "~/elisp/Large1s/supercite/"
+;; 			 "~/elisp/Large1s/gnuserv"
+;; 			 "~/elisp/Large1s/mailcrypt/"
+;; 			 "~/elisp/Large1s/ps-print/lisp"
+;;			 "~/elisp/Large1s/w3m_el/lisp/"
+;;			 "~/elisp/Large1s/supercite/"
 			 )
  			t)
 
@@ -637,13 +637,20 @@ installed.  so I had to paste the following code from the cade side. "
     (my-errors nil)))
 (setq mail-user-agent 'gnus-user-agent)
 
+(add-hook 'message-setup-hook 'turn-on-longlines)
+
 ;; (add-hook 'mail-setup-hook 'mail-abbrevs-setup)
 (add-hook 'mail-mode-hook 'mail-abbrevs-setup)
 
-;; bbdb can do some really cool stuff.  TODO: Put some stuff in
-;; bbdb-auto-notes-alist -- in particular, setup the "company" field
-;; automatically -- this needs some work and careful thinking.
 (defun snarf-company-name (str)
+  "This routine is called with the From address as the parameter."
+  (message "Niice")
+  (if (string-match "@cleartrip.com" str)
+      "Cleartrip"
+    nil))
+
+(defun snarf-group-name (str)
+  "This routine is called with the From address as the parameter."
   (if (not (and (boundp 'gnus-newsgroup-name)
 		gnus-newsgroup-name))
       ""
@@ -658,23 +665,43 @@ installed.  so I had to paste the following code from the cade side. "
 	gnus-newsgroup-name))))
 
 (defun bbdb-stuff ()
-;  (bbdb-initialize 'gnus 'rmail 'w3 'sendmail)
-;;  (require 'bbdb-gnus)
-  (bbdb-initialize 'gnus 'rmail 'sendmail)
-  (add-hook 'mail-setup-hook 'bbdb-insinuate-sendmail)
-  (add-hook 'mail-setup-hook 'bbdb-define-all-aliases)  
-  (add-hook 'message-setup-hook 'bbdb-define-all-aliases)
-  (setq bbdb-offer-save 'no-thanks)
-  (add-hook 'bbdb-notice-hook 'bbdb-auto-notes-hook)
+  (require 'bbdb-gnus)
 
-  ;; do something useful with the bbdb-auto-notes-alist
-  (setq bbdb-auto-notes-alist
-	'(("From" (".*" company snarf-company-name ))
-	  ("user-agent" (".*" interface 0))
-	  ("X-Mailer" (".*" interface 0))
-	  ("x-newsreader" (".*" interface 0))
-	  ("newsgroups" ("\\([^,]*\\),?" posted-to "\\1"))
-	  ("Xref" ("\\b[^ ]+:[0-9]+.*" seen-in))))
+  (if (string< bbdb-version "3")
+      (progn
+	(add-hook 'mail-setup-hook 'bbdb-define-all-aliases)  
+	(add-hook 'message-setup-hook 'bbdb-define-all-aliases)
+	(add-hook 'bbdb-notice-hook 'bbdb-auto-notes-hook)
+	;; do something useful with the bbdb-auto-notes-alist
+	(setq bbdb-auto-notes-alist
+	      '(("From"         (".*" seen-in   snarf-company-name ))
+		("user-agent"   (".*" interface 0))
+		("X-Mailer"     (".*" interface 0))
+		("x-newsreader" (".*" interface 0))
+		("newsgroups"   ("\\([^,]*\\),?" posted-to "\\1")))))
+
+    (progn
+      (require 'bbdb-loaddefs)
+      (add-hook 'mail-setup-hook       'bbdb-mail-aliases)
+      (add-hook 'message-setup-hook    'bbdb-mail-aliases)
+      (add-hook 'bbdb-notice-mail-hook 'bbdb-auto-notes)
+      (setq bbdb-message-pop-up        t)
+      (setq bbdb-pop-up-window-size    6)
+      (setq bbdb-mua-auto-update-init  '(gnus))
+      (add-hook 'gnus-article-prepare-hook 'bbdb-mua-auto-update)
+      (setq bbdb-auto-notes-rules
+	    '(("From"         (".*" seen-in   snarf-group-name))
+	      ("From"         (".*" organization  snarf-company-name))
+	      ("Organization" (".*" organization  0))
+	      ("user-agent"   (".*" interface 0))
+	      ("X-Mailer"     (".*" interface 0))
+	      ("x-newsreader" (".*" interface 0))
+	      ("newsgroups"   ("\\([^,]*\\),?" posted-to "\\1"))))))
+
+  (setq bbdb-north-american-phone-numbers-p nil)
+  (setq bbdb-complete-name-allow-cycling t)
+  (bbdb-initialize 'gnus 'rmail 'message 'mail)
+
   (put 'seen-in 'field-separator "; ")
 
   (setq bbdb-send-mail-style 'message)
@@ -1256,20 +1283,21 @@ This theme has black background and pleasant foreground colors."
     (yellow ((t (:foreground "yellow"))))
     (zmacs-region ((t (:background "gray65")))))))
 
-;; (load-library-carefully
-;;  "color-theme"
-;;  nil
-;;  (lambda ()
-;;    (add-to-list
-;;     'color-themes
-;;     '(color-theme-karra
-;;       "Karra"
-;;       "Sriram Karra <karra@shakti.homelinux.net>"))
-;;    (color-theme-karra))
-;;  (lambda ()
-;;    (message
-;;     "color-theme.el(c) not found in your load-path.  Setting up old way.")
-;;    (setup-colors-old-way)))
+(load-library-carefully
+ "color-theme"
+ nil
+ (lambda ()
+   (setq color-theme-directory "~/elisp/color-themes")
+   (add-to-list
+    'color-themes
+    '(color-theme-karra
+      "Karra"
+      "Sriram Karra <karra@shakti.homelinux.net>"))
+   (color-theme-karra))
+ (lambda ()
+   (message
+    "color-theme.el(c) not found in your load-path.  Setting up old way.")
+   (setup-colors-old-way)))
 
 (load-library-carefully "boxquote"
 			nil
@@ -1484,6 +1512,13 @@ This theme has black background and pleasant foreground colors."
 ;; The functions in this hook variable are run for all c-like modes;
 ;; i.e. for C, C++, Java etc.  More or less what we do for a living :)
 (add-hook 'c-mode-common-hook (function c-and-c++-mode-stuff))
+
+
+;; We need to turn this indent tabs mode off in more than one stuff...
+(defun python-mode-stuff ()
+  (setq indent-tabs-mode nil))
+
+(add-hook 'python-mode-hook 'python-mode-stuff)
 
 (defun text-mode-hook-func ()
   (when (fboundp 'filladapt-mode)
