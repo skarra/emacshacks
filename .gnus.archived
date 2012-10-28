@@ -1,7 +1,7 @@
 ;;; -*-emacs-lisp-*- Gnus startup file.
 
 ;; Created       : Febraury 2, 2001
-;; Last Modified : Wed Feb 29 15:12:08 IST 2012
+;; Last Modified : Mon May 28 13:44:59 IST 2012
 ;;
 ;; Copyright (C) 2001 - 2012, Sriram Karra <karra.etc@gmail.com>
 ;; Feel free to do as you please with this code
@@ -528,7 +528,8 @@ the local mail spool.  ")))
 ;; *sigh*.
 (setq message-ignored-cited-headers
       (concat 
-       "^X\\|^R\\|^O\\|^L\\|^I\\|^M\\|^U\\|^Content"))
+       "^X\\|^R\\|^O\\|^L\\|^I\\|^M\\|^U\\|^Content\\|^DKIM\\|"
+       "^Delivered-To\\|^Thread\\|^Precedence\\|^Disposition"))
 
 ;; In many cases, it is not fun to look at our name in the summary buffer -
 ;; For e.g. in the archive groups, all articles are written by us - the
