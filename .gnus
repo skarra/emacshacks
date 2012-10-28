@@ -1,7 +1,7 @@
 ;;; -*-emacs-lisp-*- Gnus startup file.
 
 ;; Created       : Febraury 2, 2001
-;; Last Modified : Thu Mar 08 13:15:26 IST 2012
+;; Last Modified : Thu Jun 21 11:27:05 IST 2012
 ;;
 ;; Copyright (C) 2001 - 2012, Sriram Karra <karra.etc@gmail.com>
 ;; Feel free to do as you please with this code
@@ -71,6 +71,22 @@ the local mail spool.  ")))
 ;;       nnir-search-engine 'swish-e
 ;;       nnir-swish-e-index-file (expand-file-name "~/Mail/swish-e.index"))
 
+;; BBDB is a wonderful package that can be made to automatically take
+;; note of name/email information from incoming mail or newsgroups.
+;; Since newsgroups can be very busy, it is not the default behaviour
+;; for gnus (but not for Rmail), but then, we would like this
+;; behaviour to be turned on for atleast some of the mail groups.  The
+;; following achieves this objective.
+(setq gnus-select-group-hook
+      (lambda ()
+	(setq bbdb/news-auto-create-p
+	      (if (string-match "nnimap\\+Cleartrip" gnus-newsgroup-name)
+		  t
+		nil))))
+
+(setq bbdb/gnus-summary-prefer-bbdb-data t
+      bbdb/gnus-summary-prefer-real-names nil)
+
 (setq gnus-show-mime t)
 ;; When we forward mails, we would like to maintain the integrity of the
 ;; MIME attachments/parts/whatever...  Setting the following variable
@@ -92,6 +108,7 @@ the local mail spool.  ")))
 (add-to-list 'mm-attachment-override-types "image/.*")
 
 (add-hook 'gnus-summary-mode-hook 'turn-on-gnus-mailing-list-mode)
+(add-hook 'gnus-summary-mode-hook 'turn-on-word-wrap)
 
 ;; Prompt for fetching more than 100 messages from a group.
 (setq gnus-large-newsgroup 100)
@@ -134,7 +151,8 @@ the local mail spool.  ")))
 ;; *sigh*.
 (setq message-ignored-cited-headers
       (concat 
-       "^X\\|^R\\|^O\\|^L\\|^I\\|^M\\|^U\\|^Content"))
+       "^X\\|^R\\|^O\\|^L\\|^I\\|^M\\|^U\\|^Content\\|^Thread-Index"
+       "\\|^Delivered-To\\|^Thread-Topic\\|^DKIM-Signature"))
 
 ;; In many cases, it is not fun to look at our name in the summary buffer -
 ;; For e.g. in the archive groups, all articles are written by us - the
@@ -213,8 +231,8 @@ the local mail spool.  ")))
    "Calculate the Gnus group name from the given file name."
    (let ((group (file-name-directory (directory-file-name
 				      (file-name-directory file)))))
-     (setq group (replace-regexp-in-string ".*/Maildir/"
-					   "nnimap+local:" group))
+     (setq group (replace-regexp-in-string ".*/Mails/"
+					   "nnimap+Cleartrip:" group))
      (setq group (replace-regexp-in-string "/$" "" group))
      (if (string-match ":$" group)
 	 (concat group "INBOX")
@@ -256,4 +274,4 @@ the local mail spool.  ")))
 ;; articles and they will be put in a special "queue" group.  We can send
 ;; them all at once when we connect to the net once again.
 ;;(setq gnus-agent-send-mail-function message-send-mail-function)
-(gnus-agentize)
+;; (gnus-agentize)
