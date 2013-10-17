@@ -2,7 +2,7 @@
 ;;
 ;; $Id: .customs.emacs,v 1.13 2004/11/05 09:10:59 karra Exp $
 ;;
-;; Last Modified	: Tue Jun 26 06:55:47 IST 2012 16:25:57 IST
+;; Last Modified	: Tue Aug 20 14:06:53 IST 2013 16:25:57 IST
 ;;
 ;; Emacs customisation file - called  from ~/.emacs.  You should be able
 ;; to  copy this entire  file over  into your  ~/.emacs and  life should
@@ -503,6 +503,10 @@ run before and after the library is loaded (if available)."
 
 (load-library-carefully 'cc-cmds)
 
+;; Major mode for editing mustache templates
+;; https://github.com/mustache/emacs
+(load-library-carefully 'mustache-mode)
+
 (load-library-carefully 'org
 			nil
 			(lambda ()
@@ -836,7 +840,7 @@ installed.  so I had to paste the following code from the cade side. "
 		"~/elisp/tramp/texi")
    (setq tramp-verbose 10)
    (setq tramp-debug-buffer t)
-   (setq tramp-default-method "putty")
+   (setq tramp-default-method "ssh")
    (add-to-list 'tramp-methods
 		'("putty"
 		 (tramp-connection-function tramp-open-connection-rsh)
@@ -855,9 +859,16 @@ installed.  so I had to paste the following code from the cade side. "
 		 (tramp-telnet-program nil)
 		 (tramp-telnet-args nil)))))
 
-;; iswitchb is an awesome replacement for C-x b.  Load it up and ensoy
-(when (fboundp 'iswitchb-mode)
-  (iswitchb-mode t))
+;; Mon Feb 11 17:18:58 IST 2013 Trying out the more versatile ido.el instead
+;; of iswitchb-mode,
+;;
+;; ;; iswitchb is an awesome replacement for C-x b.  Load it up and ensoy
+;; (when (fboundp 'iswitchb-mode)
+;;   (iswitchb-mode t))
+
+(when (fboundp 'ido-mode)
+  (require 'ido)
+  (ido-mode t))
 
 ;; Load up EUDC, so we can interact with the Cisco LDAP directory.
 (load-library-carefully
@@ -1283,17 +1294,24 @@ This theme has black background and pleasant foreground colors."
     (yellow ((t (:foreground "yellow"))))
     (zmacs-region ((t (:background "gray65")))))))
 
-(load-library-carefully
- "color-theme"
+(load-library-carefully "color-theme"
+ ;; before loading
  nil
+
+ ;; after loading
  (lambda ()
-   (setq color-theme-directory "~/elisp/color-themes")
-   (add-to-list
-    'color-themes
-    '(color-theme-karra
-      "Karra"
-      "Sriram Karra <karra@shakti.homelinux.net>"))
-   (color-theme-karra))
+   (eval-after-load "color-theme"
+     '(progn
+	(color-theme-initialize)
+	(color-theme-aalto-light))))
+;;   (setq color-theme-directory "~/elisp/color-themes")
+;;    (add-to-list
+;;     'color-themes
+;;     '(color-theme-karra "Karra" "Sriram Karra
+;;     <karra@shakti.homelinux.net>"))
+;;     (color-theme-karra))
+
+ ;; when library is not found
  (lambda ()
    (message
     "color-theme.el(c) not found in your load-path.  Setting up old way.")
@@ -1386,8 +1404,10 @@ This theme has black background and pleasant foreground colors."
 	      '(("\\.ml$"  . sml-mode))
 	      '(("\\.cshrc$" . shell-script-mode))
 	      '(("\\.pl$"  . cperl-mode))
+	      '(("\\.html$" . html-mode))
 	      '(("\\.ics$"  . ical-mode))
 	      '(("/usr/src/linux.*/.*\\.[ch]$" . linux-c-mode))
+	      '(("\\.mustache$" . mustache-mode))
               auto-mode-alist))
 
 ;; When the first line of a file has somehting lie
@@ -1406,6 +1426,7 @@ This theme has black background and pleasant foreground colors."
   (local-set-key "\C-m" 'newline-and-indent)
   (turn-on-auto-fill)
   (setq fill-column 78)
+  (setq indent-tabs-mode nil)
   (local-set-key [?\C-c ?\C-c] 'comment-region)
   (when (fboundp 'filladapt-mode)
     (filladapt-mode t)))
@@ -1421,6 +1442,7 @@ This theme has black background and pleasant foreground colors."
 (add-hook 'perl-mode-hook             (function general-prog-mode-hook))
 (add-hook 'cperl-mode-hook            (function general-prog-mode-hook))
 (add-hook 'python-mode-hook           (function general-prog-mode-hook))
+(add-hook 'ruby-mode-hook             (function general-prog-mode-hook))
 
 ;; Emacs Lisp libraries mostly contain some general pattern easily
 ;; visible in terms of Outlines.k  Let us turn on outline minor mode
@@ -1513,12 +1535,7 @@ This theme has black background and pleasant foreground colors."
 ;; i.e. for C, C++, Java etc.  More or less what we do for a living :)
 (add-hook 'c-mode-common-hook (function c-and-c++-mode-stuff))
 
-
-;; We need to turn this indent tabs mode off in more than one stuff...
-(defun python-mode-stuff ()
-  (setq indent-tabs-mode nil))
-
-(add-hook 'python-mode-hook 'python-mode-stuff)
+(add-hook 'ruby-mode-hook (lambda () (setq ruby-indent-level 4)))
 
 (defun text-mode-hook-func ()
   (when (fboundp 'filladapt-mode)
