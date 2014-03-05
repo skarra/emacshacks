@@ -2,7 +2,7 @@
 ;;
 ;; $Id: .customs.emacs,v 1.13 2004/11/05 09:10:59 karra Exp $
 ;;
-;; Last Modified	: Tue Aug 20 14:06:53 IST 2013 16:25:57 IST
+;; Last Modified	: Wed Mar 05 19:36:49 IST 2014 16:25:57 IST
 ;;
 ;; Emacs customisation file - called  from ~/.emacs.  You should be able
 ;; to  copy this entire  file over  into your  ~/.emacs and  life should
@@ -309,11 +309,6 @@ and any subdirectory that contains a file named `.nosearch'."
 			 )
  			t)
 
-;; PCL-CVS is part of Emacs21.  Once we are really satisfied with
-;; Emacs21, we would like to get rid of the following code.
-(GNUEmacs-old
- (add-to-list 'load-path "~/elisp/Large1s/pcl-cvs/lisp"))
-
 ;; Set up the info path for the packages I installed.  This was also moved
 ;; from .mach-dep stuff for the reasons cited above.
 (when (eq whereami 'hcl-nt)
@@ -578,15 +573,6 @@ installed.  so I had to paste the following code from the cade side. "
 ;; require compile.  This is used in M-x compile stuff for the major
 ;; modes 
 (load-library-carefully 'compile)
-
-;; pcl-cvs -- the Emacs front end for CVS.  It is part of Emacs21.  Once
-;; we are really satisfied with Emacs21, we would like to get rid of the
-;; following code.
-(GNUEmacs-old
- (load-library-carefully 'pcl-cvs
-			 nil
-			 (lambda ()
-			   (load-library "pcl-cvs-startup"))))
 
 ;; load the fantastic ibuffer.el package (not part of standard Emacs) -
 ;; This package also has a dependency on the font-lock package (if you are
