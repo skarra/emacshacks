@@ -2,7 +2,7 @@
 ;;
 ;; $Id: .customs.emacs,v 1.13 2004/11/05 09:10:59 karra Exp $
 ;;
-;; Last Modified	: Wed Mar 05 19:36:49 IST 2014 16:25:57 IST
+;; Last Modified	: Sat Mar 15 15:40:39 IST 2014 16:25:57 IST
 ;;
 ;; Emacs customisation file - called  from ~/.emacs.  You should be able
 ;; to  copy this entire  file over  into your  ~/.emacs and  life should
@@ -95,7 +95,9 @@
 (setq debug-on-error t)
 
 (defmacro GNUEmacs (&rest x)
-  (list 'if '(string-match "^GNU Emacs" (version)) (cons 'progn x)))
+  (list 'if '(or (string-match "^GNU Emacs" (version))
+                 (string-match "^Aquamacs" (version)))
+        (cons 'progn x)))
 
 (defmacro XEmacs (&rest x)
   (list 'if '(string-match "^XEmacs" (version)) (cons 'progn x)))
