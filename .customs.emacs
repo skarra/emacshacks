@@ -2,7 +2,7 @@
 ;;
 ;; $Id: .customs.emacs,v 1.13 2004/11/05 09:10:59 karra Exp $
 ;;
-;; Last Modified	: Sat Mar 15 15:40:39 IST 2014 16:25:57 IST
+;; Last Modified	: Tue Dec 08 12:27:42 IST 2015 16:25:57 IST
 ;;
 ;; Emacs customisation file - called  from ~/.emacs.  You should be able
 ;; to  copy this entire  file over  into your  ~/.emacs and  life should
@@ -311,6 +311,9 @@ and any subdirectory that contains a file named `.nosearch'."
 			 )
  			t)
 
+(add-to-list 'package-archives '("melpa-stable"
+                                 . "https://stable.melpa.org/packages/"))
+
 ;; Set up the info path for the packages I installed.  This was also moved
 ;; from .mach-dep stuff for the reasons cited above.
 (when (eq whereami 'hcl-nt)
@@ -485,6 +488,11 @@ run before and after the library is loaded (if available)."
 
 
 ;;; Load up as many nifty libraries as humanly possible
+
+(when (eq whereami 'hackerrank)
+  (load (expand-file-name "~/quicklisp/slime-helper.el"))
+  ;; Replace "sbcl" with the path to your implementation
+  (setq inferior-lisp-program "sbcl"))
 
 ;; load font-lock.  we set the global variable font-lock-set-now
 ;; accordingly.  We could have just given a final-hook function, but it
@@ -1503,9 +1511,10 @@ This theme has black background and pleasant foreground colors."
 
 (require 'cc-mode)
 ; causes an error - as this is not allowed in non-CC mode files
-;(c-add-style "Personal" my-c-style t)
-; (setq c-default-style
-;	'((other . "personal")))
+; (c-add-style "Personal" my-c-style t)
+(setq c-default-style
+      '((other . "personal")))
+(defun screen-width () 80)
 
 ;; some general stuff like turning on hungry delete and such
 (defun c-and-c++-mode-stuff ()
@@ -2187,19 +2196,26 @@ changes the modeline for the current buffer.  That is because
 ;;; Stuff from M-x customize thingy. Mess with caution.
 
 (custom-set-variables
-  ;; custom-set-variables was added by Custom -- don't edit or cut/paste it!
-  ;; Your init file should contain only one such instance.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(bbdb-gui t)
  '(c-electric-pound-behavior (quote (alignleft)))
  '(c-progress-interval 1)
  '(canlock-password "5148c33e6e24075d9474f6c88f32dad97b131909")
- '(mail-yank-ignored-headers (concat "^via:\\|^mail-from:\\|^origin:\\|^status:\\|^remailed\\|" "^received:\\|^message-id:\\|^summary-line:\\|^to:\\|" "^in-reply-to:\\|^return-path:\\|^content.*:\\|^x-.*:\\|" "^organization:\\|^mailing-list:\\|^precedence:\\|" "^list-unsubscribe:\\|^reply-to:\\|^importance:\\|^cc:"))
+ '(mail-yank-ignored-headers
+   (concat "^via:\\|^mail-from:\\|^origin:\\|^status:\\|^remailed\\|" "^received:\\|^message-id:\\|^summary-line:\\|^to:\\|" "^in-reply-to:\\|^return-path:\\|^content.*:\\|^x-.*:\\|" "^organization:\\|^mailing-list:\\|^precedence:\\|" "^list-unsubscribe:\\|^reply-to:\\|^importance:\\|^cc:"))
  '(ps-n-up-border-p nil)
  '(ps-n-up-margin 0)
  '(ps-n-up-printing 2)
  '(recentf-max-menu-items 30)
- '(recentf-max-saved-items 30))
+ '(recentf-max-saved-items 30)
+ '(safe-local-variable-values (quote ((longlines-mode . t)))))
 (custom-set-faces
-  ;; custom-set-faces was added by Custom -- don't edit or cut/paste it!
-  ;; Your init file should contain only one such instance.
- )
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(html-mode-default ((t (:inherit sgml-mode-default :height 110 :family "Monaco"))) t)
+ '(nxml-mode-default ((t (:inherit text-mode-default :height 120 :family "Monaco"))) t))
