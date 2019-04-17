@@ -2,7 +2,7 @@
 ;;
 ;; $Id: .customs.emacs,v 1.13 2004/11/05 09:10:59 karra Exp $
 ;;
-;; Last Modified	: Tue Dec 08 12:27:42 IST 2015 16:25:57 IST
+;; Last Modified	: Fri Jun 08 23:46:54 PDT 2018 16:25:57 IST
 ;;
 ;; Emacs customisation file - called  from ~/.emacs.  You should be able
 ;; to  copy this entire  file over  into your  ~/.emacs and  life should
@@ -311,8 +311,8 @@ and any subdirectory that contains a file named `.nosearch'."
 			 )
  			t)
 
-(add-to-list 'package-archives '("melpa-stable"
-                                 . "https://stable.melpa.org/packages/"))
+;;(add-to-list 'package-archives '("melpa-stable"
+;;                                 . "https://stable.melpa.org/packages/"))
 
 ;; Set up the info path for the packages I installed.  This was also moved
 ;; from .mach-dep stuff for the reasons cited above.
@@ -387,15 +387,27 @@ run before and after the library is loaded (if available)."
     (if (locate-library lib-name)
 	(progn
 	  (when (eval final-hook)
-	    (push `(funcall ,final-hook) ret-list))    
+	    (push `(condition-case nil (funcall ,final-hook) 
+		      (error
+                       (message "Error while executing final-hook for: %s"
+                                ,lib-name))) 
+                  ret-list))
 
 	    (if (symbolp lib)
-		(push `(require ',lib nil t) ret-list)
-	      (push `(load-library ,lib) ret-list))
+		(push `(condition-case nil 
+			   (require ',lib nil t)
+			 (error nil)) ret-list)
+	      (push `(condition-case nil 
+			 (load-library ,lib)
+		       (error nil)) ret-list))
 
 	    (when (eval initial-hook)
-	      (push `(funcall ,initial-hook) ret-list)))
-      	    
+	      (push `(condition-case nil 
+			  (funcall ,initial-hook) 
+                       (error
+                        (message "Error while executing final-hook for: %s"
+                                 ,lib-name)))
+                    ret-list)))
       (progn
 	(if (eval fail-func)
 	    (push `(funcall ,fail-func) ret-list)
@@ -630,7 +642,7 @@ installed.  so I had to paste the following code from the cade side. "
 ;;
 ;; Mon Feb 13 17:14:04 2012 - brought back to life at Cleartrip, just for
 ;; kicks...
-(require 'gnus-msg)
+;;(require 'gnus-msg)
 (when (file-exists-p (expand-file-name "~/.gnus"))
   (condition-case err
       (load-file "~/.gnus")
@@ -665,7 +677,7 @@ installed.  so I had to paste the following code from the cade side. "
 	gnus-newsgroup-name))))
 
 (defun bbdb-stuff ()
-  (require 'bbdb-gnus)
+;;  (require 'bbdb-gnus)
 
   (if (string< bbdb-version "3")
       (progn
