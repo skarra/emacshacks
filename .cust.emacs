@@ -76,3 +76,37 @@ being added."
 
 ;; Some global key definitions
 (global-set-key "\M-g"			'goto-line)
+
+;; Customize colors
+(defun setup-colors-old-way ()
+  (unless (featurep 'xemacs)
+    (set-cursor-color "red")
+    (set-mouse-color "brown"))
+
+  ;; set colors
+  (if window-system
+      (progn
+	(set-background-color "Black")
+	(set-foreground-color "Tan")
+	(set-cursor-color "grey"))
+
+    (set-face-foreground 'default      "black")
+    (set-face-background 'default      "beige"))
+
+  (set-face-background 'mode-line          "gray")
+  (set-face-foreground 'mode-line-emphasis "gold")
+  (set-face-background 'mode-line-emphasis "brightred")
+
+  (set-face-foreground 'italic "darkgoldenrod")
+  (set-face-foreground 'bold "red")
+  (set-face-foreground font-lock-comment-face "red")
+  (set-face-foreground font-lock-string-face "cornsilk1")
+  (set-face-foreground font-lock-function-name-face "brown")
+  (set-face-foreground font-lock-keyword-face "mediumturquoise")
+  (set-face-foreground font-lock-variable-name-face "firebrick")
+  (set-face-foreground font-lock-reference-face "red3")
+  (set-face-foreground font-lock-string-face "green4")
+  (set-face-foreground font-lock-variable-name-face "orangered")
+  (set-face-foreground font-lock-type-face "lightgreen"))
+
+(setup-colors-old-way)
